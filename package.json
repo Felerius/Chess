@@ -5,5 +5,9 @@
   "author": "David Stangl",
   "dependencies": {
     "express": "~4.11.1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-coffee": "~0.12.0"
   }
 }
