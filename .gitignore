@@ -3,6 +3,9 @@
 # Server side compiled javascript files
 *.coffee.js
 
+# User specific sublime workspace
+*.sublime-workspace
+
 # Created by https://www.gitignore.io
 
 ### Node ###
