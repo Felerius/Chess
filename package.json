@@ -2,5 +2,8 @@
   "name": "Chess",
   "version": "0.0.0",
   "description": "A simple web chess game",
-  "author": "David Stangl"
+  "author": "David Stangl",
+  "dependencies": {
+    "express": "~4.11.1"
+  }
 }
