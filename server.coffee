@@ -2,6 +2,6 @@ express = require 'express'
 app = express()
 
 app.get '/', (req, res) ->
-    res.send 'Hello World!'
+    res.sendFile __dirname + '/public/game.html'
 
 app.listen 8000
