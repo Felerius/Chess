@@ -1,0 +1,12 @@
+$dark-field-color: #555;
+
+#dark_field {
+    fill: $dark-field-color;
+    stroke: none;
+}
+
+#outline {
+    fill: white;
+    stroke: $dark-field-color;
+    stroke-width: 2;
+}
