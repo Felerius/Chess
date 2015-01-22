@@ -1,4 +1,5 @@
 serverScripts = ['*.coffee', '!Gruntfile.coffee']
+styles = ['public/styles/**/*.scss']
 
 module.exports = (grunt) ->
   grunt.initConfig
@@ -6,16 +7,26 @@ module.exports = (grunt) ->
       compileServer:
         files: [
           expand: true
-          cwd: ''
           src: serverScripts
           ext: '.coffee.js'
+        ]
+    sass:
+      styles:
+        files: [
+          expand: true
+          src: styles
+          ext: '.scss.css'
         ]
     watch:
       serverScripts:
         files: serverScripts
         tasks: ['coffee:compileServer']
+      styles:
+        files: styles
+        tasks: ['sass:styles']
     clean:
       serverScripts: ['*.coffee.js']
+      styles: ['public/styles/**/*.scss.css']
     nodemon:
       dev:
         script: 'server.coffee.js'
@@ -31,7 +42,12 @@ module.exports = (grunt) ->
     'grunt-contrib-clean'
     'grunt-nodemon'
     'grunt-concurrent'
+    # Uses libsass, a c library, quicker then the ruby version but potentially
+    # incomplete. Check here: http://sass-compatibility.github.io/.
+    # Consider replacing with https://github.com/gruntjs/grunt-contrib-sass
+    # if missing features are needed
+    'grunt-sass'
   ]
 
-  grunt.registerTask 'compile', ['coffee:compileServer']
+  grunt.registerTask 'compile', ['coffee:compileServer', 'sass:styles']
   grunt.registerTask 'automate', ['clean', 'compile', 'concurrent:dev']

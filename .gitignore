@@ -3,6 +3,9 @@
 # Server side compiled javascript files
 *.coffee.js
 
+# Compiled scss stylesheets
+*.scss.css
+
 # User specific sublime workspace
 *.sublime-workspace
 
