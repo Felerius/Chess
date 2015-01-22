@@ -16,12 +16,22 @@ module.exports = (grunt) ->
         tasks: ['coffee:compileServer']
     clean:
       serverScripts: ['*.coffee.js']
+    nodemon:
+      dev:
+        script: 'server.coffee.js'
+        ext: 'coffee.js'
+    concurrent:
+      dev: ['nodemon:dev', 'watch']
+      options:
+        logConcurrentOutput: true
 
   grunt.loadNpmTasks p for p in [
     'grunt-contrib-coffee'
     'grunt-contrib-watch'
     'grunt-contrib-clean'
+    'grunt-nodemon'
+    'grunt-concurrent'
   ]
 
   grunt.registerTask 'compile', ['coffee:compileServer']
-  grunt.registerTask 'automate', ['compile', 'watch']
+  grunt.registerTask 'automate', ['clean', 'compile', 'concurrent:dev']
