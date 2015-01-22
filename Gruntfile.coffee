@@ -1,3 +1,5 @@
+serverScripts = ['*.coffee', '!Gruntfile.coffee']
+
 module.exports = (grunt) ->
   grunt.initConfig
     coffee:
@@ -5,8 +7,18 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: ''
-          src: ['*.coffee', '!Gruntfile.coffee']
+          src: serverScripts
           ext: '.coffee.js'
         ]
+    watch:
+      serverScripts:
+        files: serverScripts
+        tasks: ['coffee:compileServer']
 
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks p for p in [
+    'grunt-contrib-coffee'
+    'grunt-contrib-watch'
+  ]
+
+  grunt.registerTask 'compile', ['coffee:compileServer']
+  grunt.registerTask 'automate', ['compile', 'watch']
