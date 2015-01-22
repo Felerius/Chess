@@ -14,10 +14,13 @@ module.exports = (grunt) ->
       serverScripts:
         files: serverScripts
         tasks: ['coffee:compileServer']
+    clean:
+      serverScripts: ['*.coffee.js']
 
   grunt.loadNpmTasks p for p in [
     'grunt-contrib-coffee'
     'grunt-contrib-watch'
+    'grunt-contrib-clean'
   ]
 
   grunt.registerTask 'compile', ['coffee:compileServer']
