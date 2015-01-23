@@ -3,6 +3,9 @@
 # Server side compiled javascript files
 *.coffee.js
 
+# Client side compiled browserify bundles
+*.bundle.js
+
 # Compiled scss stylesheets
 *.scss.css
 

@@ -1,5 +1,7 @@
 serverScripts = ['*.coffee', '!Gruntfile.coffee']
 styles = ['public/styles/**/*.scss']
+browserifyBundles =
+  'public/scripts/chess.bundle.js': 'public/scripts/chess.coffee'
 
 module.exports = (grunt) ->
   grunt.initConfig
@@ -17,6 +19,23 @@ module.exports = (grunt) ->
           src: styles
           ext: '.scss.css'
         ]
+    browserify:
+      compileClientScripts:
+        files: browserifyBundles
+        options:
+          transform: ['coffeeify']
+          browserifyOptions:
+            extensions: ['.coffee']
+            debug: true
+      watchClientScripts:
+        files: browserifyBundles
+        options:
+          transform: ['coffeeify']
+          watch: true
+          keepAlive: true
+          browserifyOptions:
+            extensions: ['.coffee']
+            debug: true
     watch:
       serverScripts:
         files: serverScripts
@@ -32,7 +51,7 @@ module.exports = (grunt) ->
         script: 'server.coffee.js'
         ext: 'coffee.js'
     concurrent:
-      dev: ['nodemon:dev', 'watch']
+      dev: ['nodemon:dev', 'watch', 'browserify:watchClientScripts']
       options:
         logConcurrentOutput: true
 
@@ -47,7 +66,8 @@ module.exports = (grunt) ->
     # Consider replacing with https://github.com/gruntjs/grunt-contrib-sass
     # if missing features are needed
     'grunt-sass'
+    'grunt-browserify'
   ]
 
-  grunt.registerTask 'compile', ['coffee:compileServer', 'sass:styles']
+  grunt.registerTask 'compile', ['coffee:compileServer', 'sass:styles', 'browserify:compileClientScripts']
   grunt.registerTask 'automate', ['clean', 'compile', 'concurrent:dev']
