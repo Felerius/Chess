@@ -3,43 +3,13 @@
     <link rel="stylesheet" href="/styles/chess.scss.css">
 </head>
 <body>
-    <svg viewBox="0 0 800 800">
+    <svg id="board" viewBox="0 0 800 800">
         <defs>
             <rect id="dark_field" width="100" height="100"/>
+            <rect id="light_field" width="100" height="100"/>
         </defs>
         <rect id="outline" x="0" y="0" width="800" height="800"/>
-        <use x="100" y="0" xlink:href="#dark_field"/>
-        <use x="300" y="0" xlink:href="#dark_field"/>
-        <use x="500" y="0" xlink:href="#dark_field"/>
-        <use x="700" y="0" xlink:href="#dark_field"/>
-        <use x="0" y="100" xlink:href="#dark_field"/>
-        <use x="200" y="100" xlink:href="#dark_field"/>
-        <use x="400" y="100" xlink:href="#dark_field"/>
-        <use x="600" y="100" xlink:href="#dark_field"/>
-        <use x="100" y="200" xlink:href="#dark_field"/>
-        <use x="300" y="200" xlink:href="#dark_field"/>
-        <use x="500" y="200" xlink:href="#dark_field"/>
-        <use x="700" y="200" xlink:href="#dark_field"/>
-        <use x="0" y="300" xlink:href="#dark_field"/>
-        <use x="200" y="300" xlink:href="#dark_field"/>
-        <use x="400" y="300" xlink:href="#dark_field"/>
-        <use x="600" y="300" xlink:href="#dark_field"/>
-        <use x="100" y="400" xlink:href="#dark_field"/>
-        <use x="300" y="400" xlink:href="#dark_field"/>
-        <use x="500" y="400" xlink:href="#dark_field"/>
-        <use x="700" y="400" xlink:href="#dark_field"/>
-        <use x="0" y="500" xlink:href="#dark_field"/>
-        <use x="200" y="500" xlink:href="#dark_field"/>
-        <use x="400" y="500" xlink:href="#dark_field"/>
-        <use x="600" y="500" xlink:href="#dark_field"/>
-        <use x="100" y="600" xlink:href="#dark_field"/>
-        <use x="300" y="600" xlink:href="#dark_field"/>
-        <use x="500" y="600" xlink:href="#dark_field"/>
-        <use x="700" y="600" xlink:href="#dark_field"/>
-        <use x="0" y="700" xlink:href="#dark_field"/>
-        <use x="200" y="700" xlink:href="#dark_field"/>
-        <use x="400" y="700" xlink:href="#dark_field"/>
-        <use x="600" y="700" xlink:href="#dark_field"/>
     </svg>
+    <script type="text/javascript" src="scripts/chess.bundle.js"></script>
 </body>
 </html>

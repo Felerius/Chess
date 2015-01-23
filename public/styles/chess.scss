@@ -1,12 +1,18 @@
 $dark-field-color: #555;
+$light-field-color: #FFF;
 
 #dark_field {
     fill: $dark-field-color;
     stroke: none;
 }
 
+#light_field {
+    fill: $light-field-color;
+    stroke: none;
+}
+
 #outline {
-    fill: white;
+    fill: none;
     stroke: $dark-field-color;
     stroke-width: 2;
 }
