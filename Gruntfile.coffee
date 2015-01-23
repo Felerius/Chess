@@ -49,7 +49,9 @@ module.exports = (grunt) ->
     nodemon:
       dev:
         script: 'server.coffee.js'
-        ext: 'coffee.js'
+        options:
+          ignore: ['node_modules/', 'public/']
+          ext: 'js'
     concurrent:
       dev: ['nodemon:dev', 'watch', 'browserify:watchClientScripts']
       options:
