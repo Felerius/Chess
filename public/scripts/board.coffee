@@ -7,18 +7,18 @@ PIECE_X_OFFSET = 5
 PIECE_Y_OFFSET = 5
 
 BEGINNING_PIECES = 
-  bishop_dark: ['c8', 'f8']
+  bishop_dark:  ['c8', 'f8']
   bishop_light: ['c1', 'f1']
-  king_dark: ['e8']
-  king_light: ['e1']
-  knight_dark: ['b8', 'g8']
+  king_dark:    ['e8']
+  king_light:   ['e1']
+  knight_dark:  ['b8', 'g8']
   knight_light: ['b1', 'g1']
-  pawn_dark: ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7']
-  pawn_light: ['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2']
-  queen_dark: ['d8']
-  queen_light: ['d1']
-  rook_dark: ['a8', 'h8']
-  rook_light: ['a1', 'h1']
+  pawn_dark:    ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7']
+  pawn_light:   ['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2']
+  queen_dark:   ['d8']
+  queen_light:  ['d1']
+  rook_dark:    ['a8', 'h8']
+  rook_light:   ['a1', 'h1']
 
 class Board
   constructor: (@darkSide) ->
