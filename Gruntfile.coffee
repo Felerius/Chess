@@ -10,14 +10,14 @@ module.exports = (grunt) ->
         files: [
           expand: true
           src: serverScripts
-          ext: '.coffee.js'
+          ext: '.js'
         ]
     sass:
       styles:
         files: [
           expand: true
           src: styles
-          ext: '.scss.css'
+          ext: '.css'
         ]
     browserify:
       compileClientScripts:
@@ -44,11 +44,12 @@ module.exports = (grunt) ->
         files: styles
         tasks: ['sass:styles']
     clean:
-      serverScripts: ['*.coffee.js']
-      styles: ['public/styles/**/*.scss.css']
+      serverScripts: ['*.js']
+      styles: ['public/styles/**/*.css']
+      clientScript: ['public/scripts/**/*.bundle.js']
     nodemon:
       dev:
-        script: 'server.coffee.js'
+        script: 'server.js'
         options:
           ignore: ['node_modules/', 'public/']
           ext: 'js'
