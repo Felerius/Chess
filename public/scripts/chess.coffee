@@ -1,0 +1,1 @@
+board = require('./board')(false)
