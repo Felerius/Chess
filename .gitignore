@@ -6,9 +6,6 @@
 # Compiled scss stylesheets
 *.css
 
-# User specific sublime workspace
-*.sublime-workspace
-
 # Created by https://www.gitignore.io
 
 ### Node ###
