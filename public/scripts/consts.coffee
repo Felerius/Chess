@@ -1,4 +1,5 @@
 module.exports =
+  numberBeginningPieces: 32
   beginningPieces:
     'c8': { piece: 'bishop', color: 'dark' }
     'f8': { piece: 'bishop', color: 'dark' }
