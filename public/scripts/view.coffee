@@ -9,6 +9,7 @@ xlinkNs = 'http://www.w3.org/1999/xlink'
 class GameView
   constructor: (@playerSide) ->
     @pieces = {}
+    @_assignSvgFields()
     @_createInitialPieces()
 
   _fieldToPiecePos: (field) ->
@@ -17,6 +18,17 @@ class GameView
     x = if @playerSide is 'light' then file*100 else 700 - file*100
     y = if @playerSide is 'light' then 700 - rank*100 else rank*100
     return [x + pieceXOffset, y + pieceYOffset]
+
+  _assignSvgFields: ->
+    # Assigns the svg field dom elements their respective chess fields
+    # The fields in the html file are generated from bottom-left and row first
+    for col in [0..7]
+      for row in [0..7]
+        svgField = document.getElementById 'field_' + (col*8 + row)
+        rank = if @playerSide is 'light' then row + 1 else 8 - row
+        fileNum = if @playerSide is 'light' then col else 7 - col
+        file = String.fromCharCode(aCharCode + fileNum)
+        svgField.chessField = file + rank
 
   _createInitialPieces: ->
     pieceNum = 0
@@ -32,6 +44,7 @@ class GameView
       [x, y] = @_fieldToPiecePos field
       svgPiece.setAttribute 'x', x
       svgPiece.setAttribute 'y', y
+      svgPiece.chessField = field
       svgBoard.appendChild svgPiece
       
   _movePiece: (from, to) ->
@@ -41,6 +54,7 @@ class GameView
     [x, y] = @_fieldToPiecePos to
     svgPiece.setAttribute 'x', x
     svgPiece.setAttribute 'y', y
+    svgPiece.chessField = to
     @pieces[to] = id
 
   executeMove: (move) ->
