@@ -51,4 +51,6 @@ class GameLogic
     @_checkEnPassantPossibility move.from, move.to
     @_executeMove move 
     
+  hasPiece: (field) -> field of @pieces
+
 module.exports = (playerSide) -> new GameLogic(playerSide)
