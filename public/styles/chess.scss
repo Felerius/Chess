@@ -16,3 +16,8 @@ $light-field-color: #FFF;
     stroke: $dark-field-color;
     stroke-width: 2;
 }
+
+#selected_field {
+    stroke: none;
+    fill: rgba(0, 0, 255, 0.3)
+}

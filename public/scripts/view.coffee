@@ -12,11 +12,15 @@ class GameView
     @_assignSvgFields()
     @_createInitialPieces()
 
-  _fieldToPiecePos: (field) ->
+  _fieldToPos: (field) ->
     file = field.charCodeAt(0) - aCharCode
     rank = parseInt(field[1]) - 1
     x = if @playerSide is 'light' then file*100 else 700 - file*100
     y = if @playerSide is 'light' then 700 - rank*100 else rank*100
+    return [x, y]
+
+  _fieldToPiecePos: (field) ->
+    [x, y] = @_fieldToPos field
     return [x + pieceXOffset, y + pieceYOffset]
 
   _assignSvgFields: ->
@@ -63,5 +67,13 @@ class GameView
     @_movePiece move.from, move.to
     if move.secondaryMove?
       @_movePiece move.secondaryMove.from, move.secondaryMove.to
+
+  highlightField: (field) ->
+    svgHighlight = document.getElementById 'selected_field'
+    svgHighlight.setAttribute 'visibility', 'show'
+    [x, y] = @_fieldToPos field
+    svgHighlight.setAttribute 'x', x
+    svgHighlight.setAttribute 'y', y
+
 
 module.exports = (playerSide) -> new GameView(playerSide)
