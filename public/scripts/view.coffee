@@ -1,7 +1,7 @@
 consts = require './consts'
 field = require './field'
 
-aCharCode = "a".charCodeAt(0)
+aCharCode = 'a'.charCodeAt(0)
 pieceXOffset = 5
 pieceYOffset = 5
 svgNs = 'http://www.w3.org/2000/svg'

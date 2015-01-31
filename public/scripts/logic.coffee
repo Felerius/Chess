@@ -20,7 +20,7 @@ class GameLogic
   hasPiece: (f) -> f of @pieces
 
   # Dummy for testing highlighting
-  getMoves: (f) -> ['e4']
+  getPossibleMoves: (f) -> ['e4']
 
   _movePiece: (from, to) ->
     @pieces[to] = @pieces[from]
