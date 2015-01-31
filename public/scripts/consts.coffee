@@ -35,7 +35,7 @@ module.exports =
     'h1': { piece: 'rook', color: 'light' }
 
   rookStarts:
-    dark: 
+    dark:
       queenSide: 'a8'
       kingSide: 'h8'
     light:

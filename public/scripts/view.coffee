@@ -50,7 +50,7 @@ class GameView
       svgPiece.setAttribute 'y', y
       svgPiece.chessField = field
       svgBoard.appendChild svgPiece
-      
+
   _movePiece: (from, to) ->
     id = @pieces[from]
     delete @pieces[from]

@@ -11,7 +11,7 @@ class GameLogic
   _movePiece: (from, to) ->
     @pieces[to] = @pieces[from]
     delete @pieces[from]
-    
+
   _updateCanCastle: (from ,to) ->
     piece = @pieces[from].piece
     if piece is 'king'
@@ -45,12 +45,12 @@ class GameLogic
 
   executePlayerMove: (move) ->
     @_updateCanCastle move.from, move.to
-    @_executeMove move 
+    @_executeMove move
 
   executeEnemyMove: (move) ->
     @_checkEnPassantPossibility move.from, move.to
-    @_executeMove move 
-    
+    @_executeMove move
+
   hasPiece: (field) -> field of @pieces
 
 module.exports = (playerSide) -> new GameLogic(playerSide)
