@@ -1,4 +1,5 @@
 consts = require './consts'
+field = require './field'
 
 class GameLogic
   constructor: (@playerSide) ->
@@ -26,11 +27,9 @@ class GameLogic
   _checkEnPassantPossibility: (from, to) ->
     @epField = null
     return if @pieces[from].piece isnt 'pawn'
-    fileFrom = from[0]
-    fileTo = to[0]
+    [fileFrom, rankFrom] = field.split from
+    [fileTo, rankTo] = field.split to
     return if fileFrom isnt fileTo
-    rankFrom = parseInt from[1]
-    rankTo = parseInt to[1]
     if Math.abs rankFrom - rankTo is 2
       @epField = fileFrom + ((rankFrom + rankTo) / 2)
 
@@ -51,6 +50,6 @@ class GameLogic
     @_checkEnPassantPossibility move.from, move.to
     @_executeMove move
 
-  hasPiece: (field) -> field of @pieces
+  hasPiece: (f) -> f of @pieces
 
 module.exports = (playerSide) -> new GameLogic(playerSide)

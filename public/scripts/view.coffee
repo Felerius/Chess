@@ -1,4 +1,5 @@
 consts = require './consts'
+field = require './field'
 
 aCharCode = "a".charCodeAt(0)
 pieceXOffset = 5
@@ -12,15 +13,14 @@ class GameView
     @_assignSvgFields()
     @_createInitialPieces()
 
-  _fieldToPos: (field) ->
-    file = field.charCodeAt(0) - aCharCode
-    rank = parseInt(field[1]) - 1
+  _fieldToPos: (f) ->
+    [file, rank] = field.toNumbers f
     x = if @playerSide is 'light' then file*100 else 700 - file*100
     y = if @playerSide is 'light' then 700 - rank*100 else rank*100
     return [x, y]
 
-  _fieldToPiecePos: (field) ->
-    [x, y] = @_fieldToPos field
+  _fieldToPiecePos: (f) ->
+    [x, y] = @_fieldToPos f
     return [x + pieceXOffset, y + pieceYOffset]
 
   _assignSvgFields: ->
@@ -37,18 +37,18 @@ class GameView
   _createInitialPieces: ->
     pieceNum = 0
     svgBoard = document.getElementById 'board'
-    for field, piece of consts.beginningPieces
+    for f, piece of consts.beginningPieces
       svgPiece = document.createElementNS svgNs, 'use'
       id = "piece_#{pieceNum}"
       pieceNum++
-      @pieces[field] = id
+      @pieces[f] = id
       imageHref = "##{piece.piece}_#{piece.color}"
       svgPiece.setAttribute 'id', id
       svgPiece.setAttributeNS xlinkNs, 'href', imageHref
-      [x, y] = @_fieldToPiecePos field
+      [x, y] = @_fieldToPiecePos f
       svgPiece.setAttribute 'x', x
       svgPiece.setAttribute 'y', y
-      svgPiece.chessField = field
+      svgPiece.chessField = f
       svgBoard.appendChild svgPiece
 
   _movePiece: (from, to) ->
@@ -68,10 +68,10 @@ class GameView
     if move.secondaryMove?
       @_movePiece move.secondaryMove.from, move.secondaryMove.to
 
-  highlightField: (field) ->
+  highlightField: (f) ->
     svgHighlight = document.getElementById 'selected_field'
     svgHighlight.setAttribute 'visibility', 'show'
-    [x, y] = @_fieldToPos field
+    [x, y] = @_fieldToPos f
     svgHighlight.setAttribute 'x', x
     svgHighlight.setAttribute 'y', y
 
