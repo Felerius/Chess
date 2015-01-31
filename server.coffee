@@ -9,7 +9,6 @@ app.get '/', (req, res) ->
     res.sendFile __dirname + '/views/game.html'
 
 io.on 'connection', (socket) ->
-  console.log 'user connected'
   socket.emit 'init',
     side: 'light'
 
