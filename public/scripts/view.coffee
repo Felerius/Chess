@@ -10,8 +10,36 @@ xlinkNs = 'http://www.w3.org/1999/xlink'
 class GameView
   constructor: (@playerSide) ->
     @pieces = {}
+    @svgBoard = document.getElementById 'board'
+    @selectedPieceHighlight = document.getElementById 'selected_piece_highlight'
+    @moveHighlights = []
     @_assignSvgFields()
     @_createInitialPieces()
+
+  executeMove: (move) ->
+    if move.captured?
+      document.getElementById(@pieces[move.captured]).remove()
+    @_movePiece move.from, move.to
+    if move.secondaryMove?
+      @_movePiece move.secondaryMove.from, move.secondaryMove.to
+
+  highlightSelectedPiece: (f) ->
+    @selectedPieceHighlight.setAttribute 'visibility', 'show'
+    [x, y] = @_fieldToPos f
+    @selectedPieceHighlight.setAttribute 'x', x
+    @selectedPieceHighlight.setAttribute 'y', y
+
+  highlightPossibleMove: (f) ->
+    id = "move_highlight_#{@moveHighlights.length}"
+    svgHighlight = @_createSvgUse(id, '#move_highlight', f, false)
+    @svgBoard.insertBefore svgHighlight, @selectedPieceHighlight
+    @moveHighlights.push svgHighlight
+
+  removeHighlights: ->
+    @selectedPieceHighlight.setAttribute 'visibility', 'hidden'
+    for highlight in @moveHighlights
+      highlight.remove()
+    @moveHighlights = []
 
   _fieldToPos: (f) ->
     [file, rank] = field.toNumbers f
@@ -34,22 +62,25 @@ class GameView
         file = String.fromCharCode(aCharCode + fileNum)
         svgField.chessField = file + rank
 
+  _createSvgUse: (id, href, f, isPiece) ->
+    [x, y] = if isPiece then @_fieldToPiecePos f else @_fieldToPos f
+    svgUse = document.createElementNS svgNs, 'use'
+    svgUse.setAttribute 'id', id
+    svgUse.setAttributeNS xlinkNs, 'href', href
+    svgUse.setAttribute 'x', x
+    svgUse.setAttribute 'y', y
+    return svgUse
+
   _createInitialPieces: ->
     pieceNum = 0
-    svgBoard = document.getElementById 'board'
     for f, piece of consts.beginningPieces
-      svgPiece = document.createElementNS svgNs, 'use'
       id = "piece_#{pieceNum}"
       pieceNum++
       @pieces[f] = id
       imageHref = "##{piece.piece}_#{piece.color}"
-      svgPiece.setAttribute 'id', id
-      svgPiece.setAttributeNS xlinkNs, 'href', imageHref
-      [x, y] = @_fieldToPiecePos f
-      svgPiece.setAttribute 'x', x
-      svgPiece.setAttribute 'y', y
+      svgPiece = @_createSvgUse id, imageHref, f, true
       svgPiece.chessField = f
-      svgBoard.appendChild svgPiece
+      @svgBoard.appendChild svgPiece
 
   _movePiece: (from, to) ->
     id = @pieces[from]
@@ -60,20 +91,5 @@ class GameView
     svgPiece.setAttribute 'y', y
     svgPiece.chessField = to
     @pieces[to] = id
-
-  executeMove: (move) ->
-    if move.captured?
-      document.getElementById(@pieces[move.captured]).remove()
-    @_movePiece move.from, move.to
-    if move.secondaryMove?
-      @_movePiece move.secondaryMove.from, move.secondaryMove.to
-
-  highlightField: (f) ->
-    svgHighlight = document.getElementById 'selected_field'
-    svgHighlight.setAttribute 'visibility', 'show'
-    [x, y] = @_fieldToPos f
-    svgHighlight.setAttribute 'x', x
-    svgHighlight.setAttribute 'y', y
-
 
 module.exports = (playerSide) -> new GameView(playerSide)

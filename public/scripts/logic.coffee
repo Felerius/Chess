@@ -9,6 +9,19 @@ class GameLogic
       kingSide: true
     @pieces = consts.beginningPieces
 
+  executePlayerMove: (move) ->
+    @_updateCanCastle move.from, move.to
+    @_executeMove move
+
+  executeEnemyMove: (move) ->
+    @_checkEnPassantPossibility move.from, move.to
+    @_executeMove move
+
+  hasPiece: (f) -> f of @pieces
+
+  # Dummy for testing highlighting
+  getMoves: (f) -> ['e4']
+
   _movePiece: (from, to) ->
     @pieces[to] = @pieces[from]
     delete @pieces[from]
@@ -41,15 +54,5 @@ class GameLogic
     @_movePiece move.from, move.to
     if move.secondaryMove?
       @_executeMove move.secondaryMove.from, move.secondaryMove.to
-
-  executePlayerMove: (move) ->
-    @_updateCanCastle move.from, move.to
-    @_executeMove move
-
-  executeEnemyMove: (move) ->
-    @_checkEnPassantPossibility move.from, move.to
-    @_executeMove move
-
-  hasPiece: (f) -> f of @pieces
 
 module.exports = (playerSide) -> new GameLogic(playerSide)

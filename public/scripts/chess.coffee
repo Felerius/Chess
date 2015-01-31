@@ -3,8 +3,12 @@ socket = io()
 socket.on 'init', (data) ->
   logic = require('./logic')(data.side)
   view = require('./view')(data.side)
-  onFieldClick = (field) ->
-    view.highlightField field if logic.hasPiece field
+  onFieldClick = (f) ->
+    view.removeHighlights()
+    if logic.hasPiece f
+      view.highlightSelectedPiece f
+      for move in logic.getMoves f
+        view.highlightPossibleMove move
 
   input = require('./input')(onFieldClick)
   socket.on 'move', (move) ->
