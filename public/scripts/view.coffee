@@ -6,13 +6,15 @@ pieceXOffset = 5
 pieceYOffset = 5
 svgNs = 'http://www.w3.org/2000/svg'
 xlinkNs = 'http://www.w3.org/1999/xlink'
+selectionCssClass = 'selectionHighlight'
+moveCssClass = 'moveHighlight'
 
 class GameView
   constructor: (@playerSide) ->
     @pieces = {}
     @svgBoard = document.getElementById 'board'
-    @selectedPieceHighlight = document.getElementById 'selected_piece_highlight'
-    @moveHighlights = []
+    @selectedField = null
+    @moveHighlightFields = []
     @_assignSvgFields()
     @_createInitialPieces()
 
@@ -24,22 +26,24 @@ class GameView
       @_movePiece move.secondaryMove.from, move.secondaryMove.to
 
   highlightSelectedPiece: (f) ->
-    @selectedPieceHighlight.setAttribute 'visibility', 'show'
-    [x, y] = @_fieldToPos f
-    @selectedPieceHighlight.setAttribute 'x', x
-    @selectedPieceHighlight.setAttribute 'y', y
+    svgField = document.getElementById f
+    svgField.classList.add selectionCssClass
+    @selectedField = f
 
   highlightPossibleMove: (f) ->
-    id = "move_highlight_#{@moveHighlights.length}"
-    svgHighlight = @_createSvgUse(id, '#move_highlight', f, false)
-    @svgBoard.insertBefore svgHighlight, @selectedPieceHighlight
-    @moveHighlights.push svgHighlight
+    svgField = document.getElementById f
+    svgField.classList.add moveCssClass
+    @moveHighlightFields.push f
 
   removeHighlights: ->
-    @selectedPieceHighlight.setAttribute 'visibility', 'hidden'
-    for highlight in @moveHighlights
-      highlight.remove()
-    @moveHighlights = []
+    if @selectedField?
+      svgField = document.getElementById @selectedField
+      svgField.classList.remove selectionCssClass
+      @selectedField = null
+    for f in @moveHighlightFields
+      svgField = document.getElementById f
+      svgField.classList.remove moveCssClass
+    @moveHighlightFields = []
 
   _fieldToPos: (f) ->
     [file, rank] = field.toNumbers f
@@ -52,15 +56,13 @@ class GameView
     return [x + pieceXOffset, y + pieceYOffset]
 
   _assignSvgFields: ->
-    # Assigns the svg field dom elements their respective chess fields
-    # The fields in the html file are generated from bottom-left and row first
-    for col in [0..7]
-      for row in [0..7]
-        svgField = document.getElementById 'field_' + (col*8 + row)
-        rank = if @playerSide is 'light' then row + 1 else 8 - row
-        fileNum = if @playerSide is 'light' then col else 7 - col
-        file = String.fromCharCode(aCharCode + fileNum)
-        svgField.chessField = file + rank
+    # Assigns the svg field dom elements their respective chess fields as id
+    for svgField in document.querySelectorAll '#board > .field'
+      col = parseInt(svgField.getAttribute('x')) / 100
+      row = parseInt(svgField.getAttribute('y')) / 100
+      rankNum = if @playerSide is 'light' then 7 - row else row
+      fileNum = if @playerSide is 'light' then col else 7 - col
+      svgField.id = field.fromNumbers fileNum, rankNum
 
   _createSvgUse: (id, href, f, isPiece) ->
     [x, y] = if isPiece then @_fieldToPiecePos f else @_fieldToPos f

@@ -1,28 +1,26 @@
 $dark-field-color: #555;
 $light-field-color: #FFF;
+$selection-highlight-color: #00F;
+$move-highlight-color: #0F0;
 
-#dark_field {
-    fill: $dark-field-color;
+.field {
     stroke: none;
+    &.dark {
+        fill: $dark-field-color
+    }
+    &.light {
+        fill: $light-field-color
+    }
+    &.selectionHighlight {
+        fill: $selection-highlight-color;
+    }
+    &.moveHighlight {
+        fill: $move-highlight-color;
+    }
 }
 
-#light_field {
-    fill: $light-field-color;
-    stroke: none;
-}
-
-#outline {
+.outline {
     fill: none;
     stroke: $dark-field-color;
     stroke-width: 2;
-}
-
-#selected_piece_highlight {
-    stroke: none;
-    fill: rgba(0, 0, 255, 0.3)
-}
-
-#move_highlight {
-    stroke: none;
-    fill: rgba(0, 255, 0, 0.3)
 }
