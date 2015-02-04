@@ -22,7 +22,8 @@ class GameLogic
   # Dummy for testing highlighting
   getPossibleMoves: (f) ->
     dir = field.directions.forward[@pieces[f].color]
-    return (field.offset f, dir, i for i in [1..2])
+    targets = (field.offset f, dir, i for i in [1..2])
+    return ({from: f, to: to} for to in targets)
 
   _movePiece: (from, to) ->
     @pieces[to] = @pieces[from]
