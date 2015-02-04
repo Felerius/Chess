@@ -20,7 +20,9 @@ class GameLogic
   hasPiece: (f) -> f of @pieces
 
   # Dummy for testing highlighting
-  getPossibleMoves: (f) -> ['e4']
+  getPossibleMoves: (f) ->
+    dir = field.directions.forward[@pieces[f].color]
+    return (field.offset f, dir, i for i in [1..2])
 
   _movePiece: (from, to) ->
     @pieces[to] = @pieces[from]
