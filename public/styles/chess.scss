@@ -2,20 +2,28 @@ $dark-field-color: #555;
 $light-field-color: #FFF;
 $selection-highlight-color: #00F;
 $move-highlight-color: #0F0;
+$highlight-weight: 85%;
+
+@mixin moveHighlightable($normal-color) {
+    &.moveHighlight {
+        fill: mix($move-highlight-color,
+                  $normal-color,
+                  $highlight-weight);
+    }
+}
 
 .field {
     stroke: none;
     &.dark {
-        fill: $dark-field-color
+        fill: $dark-field-color;
+        @include moveHighlightable($dark-field-color);
     }
     &.light {
-        fill: $light-field-color
+        fill: $light-field-color;
+        @include moveHighlightable($light-field-color);
     }
     &.selectionHighlight {
         fill: $selection-highlight-color;
-    }
-    &.moveHighlight {
-        fill: $move-highlight-color;
     }
 }
 
