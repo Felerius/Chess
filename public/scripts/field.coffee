@@ -14,8 +14,8 @@ module.exports =
 
   all:  ->
     l = []
-    for fileNum in [0...7]
-      for rowNum in [0...7]
+    for fileNum in [0..7]
+      for rowNum in [0..7]
         l.push @fromNumbers fileNum, rowNum
     return l
 
