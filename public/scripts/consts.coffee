@@ -41,3 +41,15 @@ module.exports =
     light:
       queenSide: 'a1'
       kingSide: 'h1'
+
+  pawnStartRow:
+    dark: 7
+    light: 2
+
+  directions:
+    forwardDiagonals:
+      light: [[-1, 1], [1, 1]]
+      dark: [[-1, -1], [1, -1]]
+    forward:
+      light: [0, 1]
+      dark: [0, -1]

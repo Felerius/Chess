@@ -21,9 +21,9 @@ class GameLogic
 
   # Dummy for testing highlighting
   getPossibleMoves: (f) ->
-    dir = field.directions.forward[@pieces[f].color]
-    targets = (field.offset f, dir, i for i in [1..2])
-    return ({from: f, to: to} for to in targets)
+    return switch @pieces[f].piece
+      when 'pawn' then @_getPawnMoves f
+      else []
 
   _movePiece: (from, to) ->
     @pieces[to] = @pieces[from]
@@ -57,5 +57,21 @@ class GameLogic
     @_movePiece move.from, move.to
     if move.secondaryMove?
       @_executeMove move.secondaryMove.from, move.secondaryMove.to
+
+  _getPawnMoves: (f) ->
+    color = @pieces[f].color
+    moves = []
+    dir = consts.directions.forward[color]
+    maxStep = if field.row(f) is consts.pawnStartRow[color] then 2 else 1
+    for i in [1..maxStep]
+      target = field.offset f, dir, i
+      if not field.inRange(target) or @hasPiece(target)
+        break
+      moves.push({from: f, to: target})
+    for dir in consts.directions.forwardDiagonals[color]
+      target = field.offset f, dir
+      if @hasPiece(target) and @pieces[target].color isnt color
+        moves.push {from: f, to: target, captured: target}
+    return moves
 
 module.exports = (playerSide) -> new GameLogic(playerSide)
