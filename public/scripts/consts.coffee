@@ -1,3 +1,13 @@
+dir =
+  n: [0, 1]
+  ne: [1, 1]
+  e: [1, 0]
+  se: [1, -1]
+  s: [0, -1]
+  sw: [-1, -1]
+  w: [-1, 0]
+  nw: [-1, 1]
+
 module.exports =
   numberBeginningPieces: 32
   beginningPieces:
@@ -48,8 +58,9 @@ module.exports =
 
   directions:
     forwardDiagonals:
-      light: [[-1, 1], [1, 1]]
-      dark: [[-1, -1], [1, -1]]
+      light: [dir.nw, dir.ne]
+      dark: [dir.sw, dir.se]
+    diagonals: [dir.nw, dir.ne, dir.se, dir.sw]
     forward:
-      light: [0, 1]
-      dark: [0, -1]
+      light: dir.n
+      dark: dir.s
