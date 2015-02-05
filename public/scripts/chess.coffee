@@ -30,7 +30,7 @@ class Game
         @view.highlightSelectedPiece f
         for move in @logic.getPossibleMoves f
           @possibleMoves[move.to] = move
-          @view.highlightPossibleMove move.to
+          @view.highlightPossibleMove move.to, move.captured?
 
   onServerMove: (move) =>
     if move.from is @selectedField or move.captured is @selectedField

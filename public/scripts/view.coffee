@@ -8,6 +8,7 @@ svgNs = 'http://www.w3.org/2000/svg'
 xlinkNs = 'http://www.w3.org/1999/xlink'
 selectionCssClass = 'selectionHighlight'
 moveCssClass = 'moveHighlight'
+captureCssClass = 'captureHighlight'
 
 class GameView
   constructor: (@playerSide) ->
@@ -30,9 +31,10 @@ class GameView
     svgField.classList.add selectionCssClass
     @selectedField = f
 
-  highlightPossibleMove: (f) ->
+  highlightPossibleMove: (f, isCapture) ->
+    cls = if isCapture then captureCssClass else moveCssClass
     svgField = document.getElementById f
-    svgField.classList.add moveCssClass
+    svgField.classList.add cls
     @moveHighlightFields.push f
 
   removeHighlights: ->
@@ -43,6 +45,7 @@ class GameView
     for f in @moveHighlightFields
       svgField = document.getElementById f
       svgField.classList.remove moveCssClass
+      svgField.classList.remove captureCssClass
     @moveHighlightFields = []
 
   _fieldToPos: (f) ->

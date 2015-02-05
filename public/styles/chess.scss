@@ -2,11 +2,17 @@ $dark-field-color: #555;
 $light-field-color: #FFF;
 $selection-highlight-color: #00F;
 $move-highlight-color: #0F0;
+$capture-highlight-color: #F00;
 $highlight-weight: 85%;
 
 @mixin moveHighlightable($normal-color) {
     &.moveHighlight {
         fill: mix($move-highlight-color,
+                  $normal-color,
+                  $highlight-weight);
+    }
+    &.captureHighlight {
+        fill: mix($capture-highlight-color,
                   $normal-color,
                   $highlight-weight);
     }
