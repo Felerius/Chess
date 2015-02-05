@@ -26,6 +26,10 @@ class GameLogic
     return switch @pieces[f].piece
       when 'pawn' then @_getPawnMoves f, color
       when 'bishop' then @_getBishopMoves f, color
+      when 'rook' then @_getRookMoves f, color
+      when 'queen' then @_getQueenMoves f, color
+      when 'knight' then @_getKnightMoves f, color
+      when 'king' then @_getKingMoves f, color
       else []
 
   _movePiece: (from, to) ->
@@ -64,8 +68,23 @@ class GameLogic
       @_executeMove move.secondaryMove.from, move.secondaryMove.to
 
   _getBishopMoves: (f, color) ->
+    @_getDirectionalMovesMultiple f, color, consts.directions.diagonals
+
+  _getRookMoves: (f, color) ->
+    @_getDirectionalMovesMultiple f, color, consts.directions.straights
+
+  _getQueenMoves: (f, color) ->
+    @_getDirectionalMovesMultiple f, color, consts.directions.all
+
+  _getKnightMoves: (f, color) ->
+    @_getDirectionalMovesSingle f, color, consts.directions.knightJumps
+
+  _getKingMoves: (f, color) ->
+    @_getDirectionalMovesSingle f, color, consts.directions.all
+
+  _getDirectionalMovesMultiple: (f, color, directions) ->
     moves = []
-    for dir in consts.directions.diagonals
+    for dir in directions
       i = 1
       loop
         target = field.offset f, dir, i
@@ -77,6 +96,18 @@ class GameLogic
             moves.push {from: f, to: target, captured: target}
           break
         i++
+    return moves
+
+  _getDirectionalMovesSingle: (f, color, directions) ->
+    moves = []
+    for dir in directions
+      target = field.offset f, dir
+      continue unless field.inRange target
+      if not @hasPiece target
+        moves.push {from: f, to: target}
+      else
+        if @pieces[target].color isnt color
+          moves.push {from: f, to: target, captured: target}
     return moves
 
   _getPawnMoves: (f, color) ->

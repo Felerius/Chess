@@ -61,6 +61,9 @@ module.exports =
       light: [dir.nw, dir.ne]
       dark: [dir.sw, dir.se]
     diagonals: [dir.nw, dir.ne, dir.se, dir.sw]
+    straights: [dir.n, dir.e, dir.s, dir.w]
+    all: [dir.n, dir.ne, dir.e, dir.se, dir.s, dir.sw, dir.w, dir.nw]
+    knightJumps: [[1, 2], [2, -1], [2, 1], [1, -2], [-1, -2], [-2, -1], [-2, 1], [-1, 2]]
     forward:
       light: dir.n
       dark: dir.s
