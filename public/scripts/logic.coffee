@@ -4,6 +4,7 @@ field = require './field'
 class GameLogic
   constructor: (@playerSide) ->
     @epField = null
+    @epCaptured = null
     @canCastle =
       queenSide: true
       kingSide: true
@@ -42,12 +43,14 @@ class GameLogic
 
   _checkEnPassantPossibility: (from, to) ->
     @epField = null
+    @epCaptured = null
     return if @pieces[from].piece isnt 'pawn'
     [fileFrom, rankFrom] = field.split from
     [fileTo, rankTo] = field.split to
     return if fileFrom isnt fileTo
     if Math.abs rankFrom - rankTo is 2
       @epField = fileFrom + ((rankFrom + rankTo) / 2)
+      @epCaptured = to
 
   _executeMove: (move) ->
     # We can not rely on the move overriding the captured piece,
@@ -67,11 +70,13 @@ class GameLogic
       target = field.offset f, dir, i
       if not field.inRange(target) or @hasPiece(target)
         break
-      moves.push({from: f, to: target})
+      moves.push {from: f, to: target}
     for dir in consts.directions.forwardDiagonals[color]
       target = field.offset f, dir
       if @hasPiece(target) and @pieces[target].color isnt color
         moves.push {from: f, to: target, captured: target}
+      else if target is @epField
+        moves.push {from: f, to: target, captured: @epCaptured}
     return moves
 
 module.exports = (playerSide) -> new GameLogic(playerSide)
