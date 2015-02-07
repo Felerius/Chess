@@ -24,8 +24,7 @@ class GameLogic
 
   # Dummy for testing highlighting
   getPossibleMoves: (f) ->
-    color = @pieces[f].color
-    return switch @pieces[f].piece
+    switch @pieces[f].piece
       when 'pawn' then @_getPawnMoves f
       when 'bishop' then @_getBishopMoves f
       when 'rook' then @_getRookMoves f
