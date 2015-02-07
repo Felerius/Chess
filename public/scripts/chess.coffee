@@ -19,7 +19,7 @@ class Game
     if @selectedField? and f of @possibleMoves
       move = @possibleMoves[f]
       @socket.emit 'move', move
-      @logic.executePlayerMove move
+      @logic.executeMove move
       @view.executeMove move
       @selectedField = null
       @possibleMoves = {}
@@ -35,5 +35,5 @@ class Game
   onServerMove: (move) =>
     if move.from is @selectedField or move.captured is @selectedField
       @view.removeHighlights()
-    @logic.executeEnemyMove move
+    @logic.executeMove move
     @view.executeMove move

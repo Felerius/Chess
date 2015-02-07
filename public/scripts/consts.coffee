@@ -56,6 +56,10 @@ module.exports =
     dark: 7
     light: 2
 
+  oppositeColor:
+    dark: 'light'
+    light: 'dark'
+
   directions:
     forwardDiagonals:
       light: [dir.nw, dir.ne]
