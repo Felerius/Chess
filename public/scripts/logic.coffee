@@ -22,7 +22,6 @@ class GameLogic
 
   hasPiece: (f) -> f of @pieces
 
-  # Dummy for testing highlighting
   getPossibleMoves: (f) ->
     switch @pieces[f].piece
       when 'pawn' then @_getPawnMoves f
