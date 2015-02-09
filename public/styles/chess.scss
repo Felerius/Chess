@@ -38,3 +38,8 @@ $highlight-weight: 85%;
     stroke: $dark-field-color;
     stroke-width: 2;
 }
+
+.piece {
+    // The original piece svg's are 45x45. This scales them up to 100x100
+    transform: scale(100/45);
+}

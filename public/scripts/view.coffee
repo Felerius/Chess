@@ -1,9 +1,6 @@
 consts = require './consts'
 field = require './field'
 
-aCharCode = 'a'.charCodeAt(0)
-pieceXOffset = 5
-pieceYOffset = 5
 svgNs = 'http://www.w3.org/2000/svg'
 xlinkNs = 'http://www.w3.org/1999/xlink'
 selectionCssClass = 'selectionHighlight'
@@ -54,10 +51,6 @@ class GameView
     y = if @playerSide is 'light' then 700 - rank*100 else rank*100
     return [x, y]
 
-  _fieldToPiecePos: (f) ->
-    [x, y] = @_fieldToPos f
-    return [x + pieceXOffset, y + pieceYOffset]
-
   _assignSvgFields: ->
     # Assigns the svg field dom elements their respective chess fields as id
     for svgField in document.querySelectorAll '#board > .field'
@@ -67,8 +60,8 @@ class GameView
       fileNum = if @playerSide is 'light' then col else 7 - col
       svgField.id = field.fromNumbers fileNum, rankNum
 
-  _createSvgUse: (id, href, f, isPiece) ->
-    [x, y] = if isPiece then @_fieldToPiecePos f else @_fieldToPos f
+  _createSvgUse: (id, href, f) ->
+    [x, y] = @_fieldToPos f
     svgUse = document.createElementNS svgNs, 'use'
     svgUse.setAttribute 'id', id
     svgUse.setAttributeNS xlinkNs, 'href', href
@@ -83,7 +76,7 @@ class GameView
       pieceNum++
       @pieces[f] = id
       imageHref = "##{piece.piece}_#{piece.color}"
-      svgPiece = @_createSvgUse id, imageHref, f, true
+      svgPiece = @_createSvgUse id, imageHref, f
       svgPiece.chessField = f
       @svgBoard.appendChild svgPiece
 
@@ -91,7 +84,7 @@ class GameView
     id = @pieces[from]
     delete @pieces[from]
     svgPiece = document.getElementById id
-    [x, y] = @_fieldToPiecePos to
+    [x, y] = @_fieldToPos to
     svgPiece.setAttribute 'x', x
     svgPiece.setAttribute 'y', y
     svgPiece.chessField = to
