@@ -102,7 +102,7 @@ class GameLogic
     for dir in directions
       i = 1
       loop
-        target = field.offset f, dir, i
+        target = field.offsetBy f, dir, i
         break unless field.inRange target
         if not @hasPiece target
           moves.push {from: f, to: target}
@@ -116,7 +116,7 @@ class GameLogic
   _getDirectionalMovesSingle: (f, directions) ->
     moves = []
     for dir in directions
-      target = field.offset f, dir
+      target = field.offsetBy f, dir
       continue unless field.inRange target
       if not @hasPiece target
         moves.push {from: f, to: target}
@@ -131,12 +131,12 @@ class GameLogic
     dir = consts.directions.forward[color]
     maxStep = if field.row(f) is consts.pawnStartRow[color] then 2 else 1
     for i in [1..maxStep]
-      target = field.offset f, dir, i
+      target = field.offsetBy f, dir, i
       if not field.inRange(target) or @hasPiece(target)
         break
       moves.push {from: f, to: target}
     for dir in consts.directions.forwardDiagonals[color]
-      target = field.offset f, dir
+      target = field.offsetBy f, dir
       if @hasPiece(target) and @pieces[target].color isnt color
         moves.push {from: f, to: target, captured: target}
       else if target is @epStatus[color]?.move
@@ -162,7 +162,7 @@ class GameLogic
   _canPawnCapture: (from, to, getPiece) ->
     color = getPiece(from).color
     for offset in consts.directions.forwardDiagonals[color]
-      return true if field.offset(from, offset) is to
+      return true if field.offsetBy(from, offset) is to
     return false
 
 module.exports = (playerColor) -> new GameLogic(playerColor)

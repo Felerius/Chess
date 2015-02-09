@@ -10,7 +10,7 @@ module.exports =
   fromNumbers: (fileNum, rowNum) ->
     String.fromCharCode(aCharCode + fileNum) + (rowNum + 1)
 
-  offset: (f, o, times = 1) ->
+  offsetBy: (f, o, times = 1) ->
     [fileNum, rowNum] = @toNumbers f
     return @fromNumbers fileNum + o[0] * times, rowNum + o[1] * times
 
