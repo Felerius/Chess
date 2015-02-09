@@ -23,15 +23,31 @@ class GameLogic
   hasPiece: (f) -> f of @pieces
 
   getPossibleMoves: (f) ->
-    switch @pieces[f].piece
+    moves = switch @pieces[f].piece
       when 'pawn' then @_getPawnMoves f
       when 'bishop' then @_getBishopMoves f
       when 'rook' then @_getRookMoves f
       when 'queen' then @_getQueenMoves f
       when 'knight' then @_getKnightMoves f
       when 'king' then @_getKingMoves f
+    legalMoves = []
+    color = @pieces[f].color
+    for move in moves
+      getPiece = @_simulateMove(move)
+      enemyPieces = []
+      king = undefined
+      for f in field.all()
+        p = getPiece(f)
+        continue unless p?
+        if p.color isnt color
+          enemyPieces.push f
+        else if p.piece is 'king'
+          king = f
+      unless enemyPieces.some((f) => @_canCapture(f, king, getPiece))
+        legalMoves.push move
+    return legalMoves
 
-  _movePiece: (from, to) ->
+  _movePiece:  (from, to) ->
     @pieces[to] = @pieces[from]
     delete @pieces[from]
 
@@ -126,5 +142,27 @@ class GameLogic
       else if target is @epStatus[color]?.move
         moves.push {from: f, to: target, captured: @epStatus[color].capture}
     return moves
+
+  _simulateMove: (move) ->
+    # Creates a "getPiece" function, that acts as if the given move had been performed
+    return (f) =>
+      return switch f
+        when move.from, move.secondaryMove?.from then undefined
+        when move.to then @pieces[move.from]
+        # Only needed for en passant (only then is to != captured)
+        when move.captured then undefined
+        when move.secondaryMove?.to then @pieces[move.secondaryMove.from]
+        else @pieces[f]
+
+  _canCapture: (from, to, getPiece) ->
+    return switch getPiece(from).piece
+      when 'pawn' then @_canPawnCapture from, to, getPiece
+      else false
+
+  _canPawnCapture: (from, to, getPiece) ->
+    color = getPiece(from).color
+    for offset in consts.directions.forwardDiagonals[color]
+      return true if field.offset(from, offset) is to
+    return false
 
 module.exports = (playerColor) -> new GameLogic(playerColor)
