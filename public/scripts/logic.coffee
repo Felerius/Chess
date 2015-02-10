@@ -25,18 +25,9 @@ class GameLogic
   getPossibleMoves: (f) ->
     moves = getPieceMoves f, @_getPiece, @epStatus
     legalMoves = []
-    color = @pieces[f].color
     for move in moves
       simulatedGetPiece = @_simulateMove(move)
-      enemyPieces = []
-      king = undefined
-      for f in field.all()
-        p = simulatedGetPiece(f)
-        continue unless p?
-        if p.color isnt color
-          enemyPieces.push f
-        else if p.piece is 'king'
-          king = f
+      [king, enemyPieces] = findKingAndEnemies @pieces[f].color, simulatedGetPiece
       unless enemyPieces.some((f) => canCapture(f, king, simulatedGetPiece, @epStatus))
         legalMoves.push move
     return legalMoves
@@ -90,6 +81,18 @@ class GameLogic
         when move.secondaryMove?.to then @pieces[move.secondaryMove.from]
         else @pieces[f]
     return false
+
+findKingAndEnemies = (kingColor, getPiece) ->
+  king = null
+  enemies = []
+  for f in field.all()
+    p = getPiece f
+    continue unless p?
+    if p.color isnt kingColor
+      enemies.push f
+    else if p.piece is 'king'
+      king = f
+  return [king, enemies]
 
 getPieceMoves = (f, getPiece, epStatus) ->
   return switch getPiece(f).piece
