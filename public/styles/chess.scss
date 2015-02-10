@@ -42,4 +42,5 @@ $highlight-weight: 85%;
 .piece {
     // The original piece svg's are 45x45. This scales them up to 100x100
     transform: scale(100/45);
+    pointer-events: none
 }

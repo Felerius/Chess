@@ -15,12 +15,12 @@ class GameLogic
         kingSide: true
     @pieces = consts.beginningPieces
 
+  hasPiece: (f) -> f of @pieces
+
   executeMove: (move) ->
     @_updateCanCastle move.from, move.to
     @_checkEnPassantPossibility move.from, move.to
     @_executeMove move
-
-  hasPiece: (f) -> f of @pieces
 
   getPossibleMoves: (f) ->
     moves = getPieceMoves f, @_getPiece, @epStatus

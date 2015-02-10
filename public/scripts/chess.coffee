@@ -11,10 +11,11 @@ class Game
     @possibleMoves = {}
     @logic = require('./logic')(@side)
     @view = require('./view')(@side)
-    @input = require('./input')(@onFieldClick)
+    @input = require('./input')()
     @socket.on 'move', @onServerMove
+    @input.onFieldClick = @onFieldClick
 
-  onFieldClick: (f) =>
+  onFieldClick: (f, isPiece) =>
     @view.removeHighlights()
     if @selectedField? and f of @possibleMoves
       move = @possibleMoves[f]
