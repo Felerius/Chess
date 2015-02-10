@@ -44,13 +44,29 @@ module.exports =
     'a1': { piece: 'rook', color: 'light' }
     'h1': { piece: 'rook', color: 'light' }
 
-  rookStarts:
-    dark:
-      queenSide: 'a8'
-      kingSide: 'h8'
+  castling:
     light:
-      queenSide: 'a1'
-      kingSide: 'h1'
+      kingSide:
+        allBetween: ['f1', 'g1']
+        kingTarget: 'g1'
+        rookTarget: 'f1'
+        rookStart: 'h1'
+      queenSide:
+        allBetween: ['b1', 'c1', 'd1']
+        kingTarget: 'c1'
+        rookTarget: 'd1'
+        rookStart: 'a1'
+    dark:
+      kingSide:
+        allBetween: ['f8', 'g8']
+        kingTarget: 'g8'
+        rookTarget: 'f8'
+        rookStart: 'h8'
+      queenSide:
+        allBetween: ['b8', 'c8', 'd8']
+        kingTarget: 'c8'
+        rookTarget: 'd8'
+        rookStart: 'a8'
 
   pawnStartRow:
     dark: 7

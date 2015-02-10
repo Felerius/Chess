@@ -28,7 +28,7 @@ class GameLogic
     moves = @_getPieceMoves f, @_getPiece
     legalMoves = []
     for move in moves
-      simulatedGetPiece = @_simulateMove(move)
+      simulatedGetPiece = @_simulateMove move, @_getPiece
       unless @_inCheck color, simulatedGetPiece
         legalMoves.push move
     return legalMoves
@@ -42,10 +42,9 @@ class GameLogic
     if piece is 'king'
       @status[color].castling.queenSide = @status[color].castling.kingSide = false
     else if piece is 'rook'
-      if from is consts.rookStarts[color].queenSide
-        @status[color].castling.queenSide = false
-      else if from is consts.rookStarts[color].kingSide
-        @status[color].castling.kingSide = false
+      for side in ['kingSide', 'queenSide']
+        if from is consts.castling[color][side].rookStart
+          @status[color].castling[side] = false
 
   _checkEnPassantPossibility: (from, to) ->
     oppositeColor = consts.oppositeColor[@pieces[from].color]
@@ -71,17 +70,15 @@ class GameLogic
   # To be used as an arguments for move functions
   _getPiece: (f) => @pieces[f]
 
-  _simulateMove: (move) ->
-    # Creates a "getPiece" function, that acts as if the given move had been performed
+  _simulateMove: (move, getPiece) ->
     return (f) =>
       return switch f
         when move.from, move.secondaryMove?.from then undefined
-        when move.to then @pieces[move.from]
+        when move.to then getPiece(move.from)
         # Only needed for en passant (only then is to != captured)
         when move.captured then undefined
-        when move.secondaryMove?.to then @pieces[move.secondaryMove.from]
-        else @pieces[f]
-    return false
+        when move.secondaryMove?.to then getPiece(move.secondaryMove.from)
+        else getPiece(f)
 
   _inCheck: (color, getPiece) ->
     king = null
@@ -100,7 +97,7 @@ class GameLogic
       when 'pawn'
         @_getPawnMoves f, getPiece
       when 'king'
-        @_getDirectionalMovesSingle f, getPiece, consts.directions.all
+        @_getKingMoves f, getPiece
       when 'knight'
         @_getDirectionalMovesSingle f, getPiece, consts.directions.knightJumps
       when 'rook'
@@ -142,7 +139,24 @@ class GameLogic
         moves.push {from: f, to: target}
     return moves
 
-  _getPawnMoves: (f, getPiece, epStatus) ->
+  _getKingMoves: (f, getPiece) ->
+    color = getPiece(f).color
+    moves = @_getDirectionalMovesSingle f, getPiece, consts.directions.all
+    for side in ['kingSide', 'queenSide']
+      continue unless @status[color].castling[side]
+      data = consts.castling[color][side]
+      continue if data.allBetween.some (f2) -> getPiece(f2)?
+      continue if @_inCheck color, getPiece
+      # Simulate move of king to skipped field to test for check
+      # Skipped field is always the same as rook target field
+      getPieceSimulated = @_simulateMove {from: f, to: data.rookTarget}, getPiece
+      continue if @_inCheck color, getPieceSimulated
+      # Check for check after the move is done by an outer method
+      rookMove = {from: data.rookStart, to: data.rookTarget}
+      moves.push {from: f, to: data.kingTarget, secondaryMove: rookMove}
+    return moves
+
+  _getPawnMoves: (f, getPiece) ->
     moves = []
     color = getPiece(f).color
     dir = consts.directions.forward[color]
