@@ -3,16 +3,17 @@ field = require './field'
 
 class GameLogic
   constructor: (@playerColor) ->
-    @epStatus =
-      dark: null
-      light: null
-    @castlingStatus =
-      dark:
-        queenSide: true
-        kingSide: true
+    @status =
       light:
-        queenSide: true
-        kingSide: true
+        enPassant: null
+        castling:
+          queenSide: true
+          kingSide: true
+      dark:
+        enPassant: null
+        castling:
+          queenSide: true
+          kingSide: true
     @pieces = consts.beginningPieces
 
   hasPiece: (f) -> f of @pieces
@@ -23,12 +24,13 @@ class GameLogic
     @_executeMove move
 
   getPossibleMoves: (f) ->
-    moves = getPieceMoves f, @_getPiece, @epStatus
+    color = @pieces[f].color
+    moves = getPieceMoves f, @_getPiece, @status[color].enPassant
     legalMoves = []
     for move in moves
       simulatedGetPiece = @_simulateMove(move)
-      [king, enemyPieces] = findKingAndEnemies @pieces[f].color, simulatedGetPiece
-      unless enemyPieces.some((f) => canCapture(f, king, simulatedGetPiece, @epStatus))
+      [king, enemyPieces] = findKingAndEnemies color, simulatedGetPiece
+      unless enemyPieces.some((f) => canCapture(f, king, simulatedGetPiece, @status[color].enPassant))
         legalMoves.push move
     return legalMoves
 
@@ -39,22 +41,22 @@ class GameLogic
   _updateCanCastle: (from ,to) ->
     {piece, color} = @pieces[from]
     if piece is 'king'
-      @castlingStatus[color].queenSide = @castlingStatus[color].kingSide = false
+      @status[color].castling.queenSide = @status[color].castling.kingSide = false
     else if piece is 'rook'
       if from is consts.rookStarts[color].queenSide
-        @castlingStatus[color].queenSide = false
+        @status[color].castling.queenSide = false
       else if from is consts.rookStarts[color].kingSide
-        @castlingStatus[color].kingSide = false
+        @status[color].castling.kingSide = false
 
   _checkEnPassantPossibility: (from, to) ->
     oppositeColor = consts.oppositeColor[@pieces[from].color]
-    @epStatus[oppositeColor] = null
+    @status[oppositeColor].enPassant = null
     return if @pieces[from].piece isnt 'pawn'
     [fileFrom, rankFrom] = field.split from
     [fileTo, rankTo] = field.split to
     return if fileFrom isnt fileTo
     if Math.abs(rankFrom - rankTo) is 2
-      @epStatus[oppositeColor] =
+      @status[oppositeColor].enPassant =
         move: fileFrom + ((rankFrom + rankTo) / 2)
         capture: to
 
@@ -105,7 +107,7 @@ getPieceMoves = (f, getPiece, epStatus) ->
     when 'rook'
       getDirectionalMovesMultiple f, getPiece, consts.directions.straights
     when 'bishop'
-      getDirectionalMovesMultiple f, getPiece, consts.directions.diagonals
+        getDirectionalMovesMultiple f, getPiece, consts.directions.diagonals
     when 'queen'
       getDirectionalMovesMultiple f, getPiece, consts.directions.all
 
@@ -155,8 +157,8 @@ getPawnMoves = (f, getPiece, epStatus) ->
     piece = getPiece target
     if piece? and piece.color isnt color
       moves.push {from: f, to: target, captured: target}
-    else if target is epStatus[color]?.move
-      moves.push {from: f, to: target, captured: epStatus[color].capture}
+    else if target is epStatus?.move
+      moves.push {from: f, to: target, captured: epStatus.capture}
   return moves
 
 # Requires there to be a piece on the target field
