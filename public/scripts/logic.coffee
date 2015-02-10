@@ -25,12 +25,11 @@ class GameLogic
 
   getPossibleMoves: (f) ->
     color = @pieces[f].color
-    moves = getPieceMoves f, @_getPiece, @status[color].enPassant
+    moves = @_getPieceMoves f, @_getPiece
     legalMoves = []
     for move in moves
       simulatedGetPiece = @_simulateMove(move)
-      [king, enemyPieces] = findKingAndEnemies color, simulatedGetPiece
-      unless enemyPieces.some((f) => canCapture(f, king, simulatedGetPiece, @status[color].enPassant))
+      unless @_inCheck color, simulatedGetPiece
         legalMoves.push move
     return legalMoves
 
@@ -84,88 +83,88 @@ class GameLogic
         else @pieces[f]
     return false
 
-findKingAndEnemies = (kingColor, getPiece) ->
-  king = null
-  enemies = []
-  for f in field.all()
-    p = getPiece f
-    continue unless p?
-    if p.color isnt kingColor
-      enemies.push f
-    else if p.piece is 'king'
-      king = f
-  return [king, enemies]
+  _inCheck: (color, getPiece) ->
+    king = null
+    enemies = []
+    for f in field.all()
+      p = getPiece f
+      continue unless p?
+      if p.color isnt color
+        enemies.push f
+      else if p.piece is 'king'
+        king = f
+    return enemies.some (f) => @_canCapture(f, king, getPiece)
 
-getPieceMoves = (f, getPiece, epStatus) ->
-  return switch getPiece(f).piece
-    when 'pawn'
-      getPawnMoves f, getPiece, epStatus
-    when 'king'
-      getDirectionalMovesSingle f, getPiece, consts.directions.all
-    when 'knight'
-      getDirectionalMovesSingle f, getPiece, consts.directions.knightJumps
-    when 'rook'
-      getDirectionalMovesMultiple f, getPiece, consts.directions.straights
-    when 'bishop'
-        getDirectionalMovesMultiple f, getPiece, consts.directions.diagonals
-    when 'queen'
-      getDirectionalMovesMultiple f, getPiece, consts.directions.all
+  _getPieceMoves: (f, getPiece) ->
+    return switch getPiece(f).piece
+      when 'pawn'
+        @_getPawnMoves f, getPiece
+      when 'king'
+        @_getDirectionalMovesSingle f, getPiece, consts.directions.all
+      when 'knight'
+        @_getDirectionalMovesSingle f, getPiece, consts.directions.knightJumps
+      when 'rook'
+        @_getDirectionalMovesMultiple f, getPiece, consts.directions.straights
+      when 'bishop'
+        @_getDirectionalMovesMultiple f, getPiece, consts.directions.diagonals
+      when 'queen'
+        @_getDirectionalMovesMultiple f, getPiece, consts.directions.all
 
-getDirectionalMovesMultiple = (f, getPiece, directions) ->
-  moves = []
-  color = getPiece(f).color
-  for dir in directions
-    i = 1
-    loop
-      target = field.offsetBy f, dir, i
-      break unless field.inRange target
+  _getDirectionalMovesMultiple: (f, getPiece, directions) ->
+    moves = []
+    color = getPiece(f).color
+    for dir in directions
+      i = 1
+      loop
+        target = field.offsetBy f, dir, i
+        break unless field.inRange target
+        piece = getPiece target
+        if piece?
+          if piece.color isnt color
+            moves.push {from: f, to: target, captured: target}
+          break
+        else
+          moves.push {from: f, to: target}
+        i++
+    return moves
+
+  _getDirectionalMovesSingle: (f, getPiece, directions) ->
+    moves = []
+    color = getPiece(f).color
+    for dir in directions
+      target = field.offsetBy f, dir
+      continue unless field.inRange target
       piece = getPiece target
       if piece?
         if piece.color isnt color
           moves.push {from: f, to: target, captured: target}
-        break
       else
         moves.push {from: f, to: target}
-      i++
-  return moves
+    return moves
 
-getDirectionalMovesSingle = (f, getPiece, directions) ->
-  moves = []
-  color = getPiece(f).color
-  for dir in directions
-    target = field.offsetBy f, dir
-    continue unless field.inRange target
-    piece = getPiece target
-    if piece?
-      if piece.color isnt color
-        moves.push {from: f, to: target, captured: target}
-    else
+  _getPawnMoves: (f, getPiece, epStatus) ->
+    moves = []
+    color = getPiece(f).color
+    dir = consts.directions.forward[color]
+    maxStep = if field.row(f) is consts.pawnStartRow[color] then 2 else 1
+    for i in [1..maxStep]
+      target = field.offsetBy f, dir, i
+      break if not field.inRange(target) or getPiece(target)?
       moves.push {from: f, to: target}
-  return moves
+    for dir in consts.directions.forwardDiagonals[color]
+      target = field.offsetBy f, dir
+      piece = getPiece target
+      if piece? and piece.color isnt color
+        moves.push {from: f, to: target, captured: target}
+      else if target is @status[color].enPassant?.move
+        moves.push {from: f, to: target, captured: @status[color].enPassant.capture}
+    return moves
 
-getPawnMoves = (f, getPiece, epStatus) ->
-  moves = []
-  color = getPiece(f).color
-  dir = consts.directions.forward[color]
-  maxStep = if field.row(f) is consts.pawnStartRow[color] then 2 else 1
-  for i in [1..maxStep]
-    target = field.offsetBy f, dir, i
-    break if not field.inRange(target) or getPiece(target)?
-    moves.push {from: f, to: target}
-  for dir in consts.directions.forwardDiagonals[color]
-    target = field.offsetBy f, dir
-    piece = getPiece target
-    if piece? and piece.color isnt color
-      moves.push {from: f, to: target, captured: target}
-    else if target is epStatus?.move
-      moves.push {from: f, to: target, captured: epStatus.capture}
-  return moves
-
-# Requires there to be a piece on the target field
-canCapture = (from, target, getPiece, epStatus) ->
-  # Very much brute force, but performance impact seems to be negligible
-  # Can be otherwise replaced by a more math heavy solution
-  return getPieceMoves(from, getPiece, epStatus).some (move) ->
-    move.captured is target
+  # Requires there to be a piece on the target field
+  _canCapture: (from, target, getPiece) ->
+    # Very much brute force, but performance impact seems to be negligible
+    # Can be otherwise replaced by a more math heavy solution
+    return @_getPieceMoves(from, getPiece).some (move) ->
+      move.captured is target
 
 module.exports = (playerColor) -> new GameLogic(playerColor)
