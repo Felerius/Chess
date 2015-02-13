@@ -1,9 +1,9 @@
 class MessageSystem
   constructor: ->
-    handlers = {}
+    @handlers = {}
 
   on: (type, handler) ->
-    if event not of @handlers
+    if type not of @handlers
       @handlers[type] = []
     @handlers[type].push handler
 
