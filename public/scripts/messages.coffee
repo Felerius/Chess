@@ -11,4 +11,4 @@ class MessageSystem
     for handler in @handlers[type]
       handler args...
 
-module.exports = () -> new MessageSystem()
+module.exports = MessageSystem
