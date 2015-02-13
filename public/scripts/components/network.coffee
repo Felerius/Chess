@@ -12,5 +12,4 @@ class NetworkComponent
     return if @disableHandler
     @socket.emit 'move', move
 
-module.exports = (msgSystem, data, socket) ->
-  new NetworkComponent(msgSystem, data, socket)
+module.exports = NetworkComponent
