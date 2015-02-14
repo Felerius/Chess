@@ -1,12 +1,12 @@
 field = require '../field'
 
 class InputComponent
-  construct: (@msgSystem, @data) ->
+  constructor: (@msgSystem, @data) ->
     for f in field.all()
       svgField = document.getElementById f
-      svgField.addEventListener 'onclick', @onFieldClick
-      svgField.addEventListener 'onmouseover', @onFieldMouseOver
-      svgField.addEventListener 'onmouseout', @onFieldMouseOut
+      svgField.addEventListener 'click', @onFieldClick
+      svgField.addEventListener 'mouseover', @onFieldMouseOver
+      svgField.addEventListener 'mouseout', @onFieldMouseOut
 
   onFieldClick: (event) =>
     return if not @data.playerActive
