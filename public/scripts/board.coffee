@@ -35,3 +35,5 @@ class Board
       h1: { piece: 'rook', color: 'light' }
 
   get: (f) -> @pieces[f]
+
+module.exports = Board
