@@ -20,7 +20,7 @@ class InputComponent
       @selectedPiece = null
     else
       @selectedPiece = @data.board.get f
-      @msgSystem.send 'pieceSelected', @selectedPiece
+      @msgSystem.send 'pieceSelected', @selectedPiece if @selectedPiece?
 
   onFieldMouseOver: (event) =>
 
