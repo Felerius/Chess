@@ -12,18 +12,25 @@ class InputComponent
     return if not @data.playerActive
     f = event.target.id
     if @selectedPiece?
-      move = m for m in @data.possibleMoves[@selectedPiece] when m.to is f
+      move = @_tryFindMove f
       if move?
         @msgSystem.send 'move', move
       else
-        @msgSystem.send 'pieceSelected', null
-      @selectedPiece = null
+        @selectedPiece = if @data.board.get(f)? then f else null
+        @msgSystem.send 'pieceSelected', @selectedPiece
     else
-      @selectedPiece = @data.board.get f
-      @msgSystem.send 'pieceSelected', @selectedPiece if @selectedPiece?
+      if @data.board.get(f)?
+        @selectedPiece = f
+        @msgSystem.send 'pieceSelected', f
 
   onFieldMouseOver: (event) =>
 
   onFieldMouseOut: (event) =>
+
+  _tryFindMove: (f) ->
+    moves = @data.possibleMoves[@selectedPiece]
+    return for m in moves when m.to is f if moves?
+    return null
+
 
 module.exports = InputComponent

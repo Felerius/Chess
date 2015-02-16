@@ -1,7 +1,7 @@
 serverScripts = ['*.coffee', '!Gruntfile.coffee']
 styles = ['public/styles/**/*.scss']
 browserifyBundles =
-  'public/scripts/chess.bundle.js': 'public/scripts/chess.coffee'
+  'public/scripts/game.bundle.js': 'public/scripts/game.coffee'
 
 module.exports = (grunt) ->
   grunt.initConfig
