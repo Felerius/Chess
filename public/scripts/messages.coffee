@@ -8,6 +8,7 @@ class MessageSystem
     @handlers[type].push handler
 
   send: (type, args...) ->
+    return if not @handlers[type]?
     for handler in @handlers[type]
       handler args...
 
