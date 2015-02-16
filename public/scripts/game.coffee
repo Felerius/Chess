@@ -4,6 +4,7 @@ Board = require './board'
 MessageSystem = require './messages'
 NetworkComponent = require './components/network'
 InputComponent = require './components/input'
+ViewComponent = require './components/view'
 
 assignFields = (side) ->
   for svgField in document.querySelectorAll '#board > .field'
@@ -23,5 +24,6 @@ socket.on 'init', (msgData) ->
   msgSystem = new MessageSystem()
   network = new NetworkComponent(msgSystem, data, socket)
   input = new InputComponent(msgSystem, data)
+  view = new ViewComponent(msgSystem, data)
   msgSystem.on 'move', (o) -> console.log(o)
   msgSystem.on 'pieceSelected', (o) -> console.log(o)

@@ -36,4 +36,6 @@ class Board
 
   get: (f) -> @pieces[f]
 
+  all: -> @pieces
+
 module.exports = Board
