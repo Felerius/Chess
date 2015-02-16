@@ -6,16 +6,25 @@ class ViewComponent
   constructor: (@msgSystem, @data) ->
     @svgBoard = document.getElementById 'board'
     @fieldToPieceId = {}
-    @selectedField = null
+    @highlights = {}
     @_createPieces()
     @msgSystem.on 'pieceSelected', @_onPieceSelected
 
-  _onPieceSelected: (f) =>
-    if @selectedField?
-      document.getElementById(@selectedField).classList.remove selectedClass
-    if f?
-      @selectedField = f
-      document.getElementById(f).classList.add selectedClass
+  _clearHighlights: ->
+    for cssClass, fields of @highlights
+      for svgField in fields
+        svgField.classList.remove cssClass
+
+  _addHighlight: (f, cssClass) ->
+    svgField = document.getElementById f
+    svgField.classList.add cssClass
+    @highlights[cssClass] ?= []
+    @highlights[cssClass].push svgField
+
+  _onPieceSelected: (selected) =>
+    @_clearHighlights()
+    if selected?
+      @_addHighlight selected, selectedClass
 
   _createPieces: ->
     pieceNum = 0
