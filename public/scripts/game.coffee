@@ -5,6 +5,7 @@ MessageSystem = require './messages'
 NetworkComponent = require './components/network'
 InputComponent = require './components/input'
 ViewComponent = require './components/view'
+LogicComponent = require './components/logic'
 
 assignFields = (side) ->
   for svgField in document.querySelectorAll '#board > .field'
@@ -20,10 +21,13 @@ socket.on 'init', (msgData) ->
   data =
     playerActive: msgData.side is 'light'
     board: new Board()
-    possibleMoves: {}
   msgSystem = new MessageSystem()
   network = new NetworkComponent(msgSystem, data, socket)
   input = new InputComponent(msgSystem, data, msgData.side)
   view = new ViewComponent(msgSystem, data)
-  msgSystem.on 'move', (o) -> console.log(o)
-  msgSystem.on 'pieceSelected', (o) -> console.log(o)
+  logic = new LogicComponent(msgSystem, data)
+  # Gives components the chance to perform initialization that relies on
+  # the other components existing
+  msgSystem.send 'init'
+  msgSystem.on 'move', (args...) -> console.log(args...)
+  msgSystem.on 'pieceSelected', (args...) -> console.log(args...)

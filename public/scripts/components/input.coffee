@@ -4,33 +4,39 @@ class InputComponent
   constructor: (@msgSystem, @data, @playerColor) ->
     for f in field.all()
       svgField = document.getElementById f
-      svgField.addEventListener 'click', @onFieldClick
-      svgField.addEventListener 'mouseover', @onFieldMouseOver
-      svgField.addEventListener 'mouseout', @onFieldMouseOut
+      svgField.addEventListener 'click', @_onFieldClick
+      svgField.addEventListener 'mouseover', @_onFieldMouseOver
+      svgField.addEventListener 'mouseout', @_onFieldMouseOut
+    @msgSystem.on 'movesCalculated', @_onMovesCalculated
 
-  onFieldClick: (event) =>
+  _onMovesCalculated: (possibleMoves) =>
+    @possibleMoves = possibleMoves
+
+  _onFieldClick: (event) =>
     return if not @data.playerActive
     f = event.target.id
     if @selectedPiece?
       move = @_tryFindMove f
       if move?
         @msgSystem.send 'move', move
+        @msgSystem.send 'pieceSelected', null
         return
     piece = @data.board.get(f)
     if piece? and piece.color is @playerColor
       @selectedPiece = f
+      @msgSystem.send 'pieceSelected', f, @possibleMoves[f]
     else
       @selectedPiece = null
-    @msgSystem.send 'pieceSelected', @selectedPiece
+      @msgSystem.send 'pieceSelected', null
 
-  onFieldMouseOver: (event) =>
+  _onFieldMouseOver: (event) =>
 
-  onFieldMouseOut: (event) =>
+  _onFieldMouseOut: (event) =>
 
   _tryFindMove: (f) ->
-    moves = @data.possibleMoves[@selectedPiece]
-    return for m in moves when m.to is f if moves?
+    moves = @possibleMoves[@selectedPiece]
+    if moves?
+      return (m for m in moves when m.to is f)[0]
     return null
-
 
 module.exports = InputComponent
