@@ -15,13 +15,17 @@ assignFields = (side) ->
     fileNum = if side is 'light' then col else 7 - col
     svgField.id = field.fromNumbers fileNum, rankNum
 
+logMessage = (type, args, numListeners) ->
+  console.log("#{type} (#{numListeners} listeners)")
+  console.log(args)
+
 socket = io()
 socket.on 'init', (msgData) ->
   assignFields msgData.side
   data =
     playerActive: msgData.side is 'light'
     board: new Board()
-  msgSystem = new MessageSystem()
+  msgSystem = new MessageSystem(logMessage)
   network = new NetworkComponent(msgSystem, data, socket)
   input = new InputComponent(msgSystem, data, msgData.side)
   view = new ViewComponent(msgSystem, data)
@@ -29,5 +33,3 @@ socket.on 'init', (msgData) ->
   # Gives components the chance to perform initialization that relies on
   # the other components existing
   msgSystem.send 'init'
-  msgSystem.on 'move', (args...) -> console.log(args...)
-  msgSystem.on 'pieceSelected', (args...) -> console.log(args...)

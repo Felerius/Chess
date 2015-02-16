@@ -1,5 +1,5 @@
 class MessageSystem
-  constructor: ->
+  constructor: (@logger) ->
     @handlers = {}
 
   on: (type, handler) ->
@@ -8,8 +8,12 @@ class MessageSystem
     @handlers[type].push handler
 
   send: (type, args...) ->
-    return if not @handlers[type]?
-    for handler in @handlers[type]
-      handler args...
+    handlers = @handlers[type]
+    if not handlers?
+      @logger(type, args, 0) if @logger?
+    else
+      @logger(type, args, handlers.length) if @logger?
+      for handler in @handlers[type]
+        handler args...
 
 module.exports = MessageSystem
