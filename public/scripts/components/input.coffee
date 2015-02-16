@@ -49,6 +49,7 @@ class InputComponent
     @_handleNonActiveHighlight f, true
 
   _onFieldMouseOver: (event) =>
+    return if @currentHighlighted? and @wasCurrentClicked
     @_handleNonActiveHighlight event.target.id, false
 
   _onFieldMouseOut: (event) =>
