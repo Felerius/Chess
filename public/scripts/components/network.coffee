@@ -3,12 +3,12 @@ class NetworkComponent
     @socket.on 'move', @onEnemyMove
     @msgSystem.on 'move', @onMoveMsg
 
-  onEnemyMove: (move) ->
+  onEnemyMove: (move) =>
     @disableHandler = true
     @msgSystem.send 'move', move
     @disableHandler = false
 
-  onMoveMsg: (move) ->
+  onMoveMsg: (move) =>
     return if @disableHandler
     @socket.emit 'move', move
 
