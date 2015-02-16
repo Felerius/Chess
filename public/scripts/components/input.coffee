@@ -1,7 +1,7 @@
 field = require '../field'
 
 class InputComponent
-  constructor: (@msgSystem, @data) ->
+  constructor: (@msgSystem, @data, @playerColor) ->
     for f in field.all()
       svgField = document.getElementById f
       svgField.addEventListener 'click', @onFieldClick
@@ -15,13 +15,13 @@ class InputComponent
       move = @_tryFindMove f
       if move?
         @msgSystem.send 'move', move
-      else
-        @selectedPiece = if @data.board.get(f)? then f else null
-        @msgSystem.send 'pieceSelected', @selectedPiece
+        return
+    piece = @data.board.get(f)
+    if piece? and piece.color is @playerColor
+      @selectedPiece = f
     else
-      if @data.board.get(f)?
-        @selectedPiece = f
-        @msgSystem.send 'pieceSelected', f
+      @selectedPiece = null
+    @msgSystem.send 'pieceSelected', @selectedPiece
 
   onFieldMouseOver: (event) =>
 

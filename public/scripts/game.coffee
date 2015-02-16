@@ -23,7 +23,7 @@ socket.on 'init', (msgData) ->
     possibleMoves: {}
   msgSystem = new MessageSystem()
   network = new NetworkComponent(msgSystem, data, socket)
-  input = new InputComponent(msgSystem, data)
+  input = new InputComponent(msgSystem, data, msgData.side)
   view = new ViewComponent(msgSystem, data)
   msgSystem.on 'move', (o) -> console.log(o)
   msgSystem.on 'pieceSelected', (o) -> console.log(o)
