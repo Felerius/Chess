@@ -21,7 +21,7 @@ class ViewComponent
     @highlights[cssClass] ?= []
     @highlights[cssClass].push svgField
 
-  _onPieceSelected: (selected, moves) =>
+  _onPieceSelected: (selected, moves, active) =>
     @_clearHighlights()
     if selected?
       @_addHighlight selected, selectedClass
