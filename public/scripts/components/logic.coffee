@@ -9,7 +9,7 @@ pawnMove =
   light: [0, 1]
 pawnCapture =
   dark: [[-1, -1], [1, -1]]
-  light: [[-1, 1], [-1, 1]]
+  light: [[-1, 1], [1, 1]]
 rookStarts =
   dark:
     queenSide: 'a8'
