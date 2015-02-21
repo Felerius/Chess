@@ -6,6 +6,7 @@ class InputComponent
     @wasCurrentClicked = false
     @_addEventListeners()
     @msgSystem.on 'statusUpdated', @_onStatusUpdated
+    @msgSystem.on 'move', @_onMove
 
   _addEventListeners: ->
     for f in field.all()
@@ -19,6 +20,13 @@ class InputComponent
       moves = status.getPossibleMoves @currentHighlighted
       active = status.playerActive and @wasCurrentClicked
       @msgSystem.send 'pieceSelected', @currentHighlighted, moves, active
+
+  _onMove: (move) =>
+    changedFields = [move.from]
+    changedFields.push(move.captured) if move.captured?
+    changedFields.push(move.secondaryMove.from) if move.secondaryMove?
+    if @currentHighlighted in changedFields
+      @currentHighlighted = null
 
   _handleNonActiveHighlight: (f, isClick) ->
     piece = @status.board.get f
