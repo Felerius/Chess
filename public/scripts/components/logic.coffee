@@ -10,6 +10,13 @@ pawnMove =
 pawnCapture =
   dark: [[-1, -1], [1, -1]]
   light: [[-1, 1], [-1, 1]]
+rookStarts =
+  dark:
+    queenSide: 'a8'
+    kingSide: 'h8'
+  light:
+    queenSide: 'a1'
+    kingSide: 'h1'
 knightJumps = [[1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1], [-1, 2]]
 straights = [[1, 0], [-1, 0], [0, 1], [0, -1]]
 diagonals = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
@@ -17,6 +24,15 @@ allDirections = straights.concat diagonals
 
 class LogicComponent
   constructor: (@msgSystem, playerColor) ->
+    startingCastlingStatus =
+      queenSide: true
+      kingSide: true
+    @castlingStatus =
+      dark: startingCastlingStatus
+      light: startingCastlingStatus
+    @enPassantStatus =
+      dark: null
+      light: null
     @status =
       playerColor: playerColor
       playerActive: playerColor is 'light'
@@ -30,10 +46,34 @@ class LogicComponent
     @msgSystem.send 'statusUpdated', @status, true
 
   _onMove: (move) =>
+    @_updateCastlingStatus move
+    @_updateEnPassantStatus move
     @status.board.executeMove move
     @status.playerActive = not @status.playerActive
     @moveCache = {}
     @msgSystem.send 'statusUpdated', @status, false
+
+  _updateCastlingStatus: (move) ->
+    # Only testing primary move, only secondary move is castling
+    {piece, color} = @status.board.get move.from
+    if piece is 'king'
+      @castlingStatus[color].queenSide = @castlingStatus[color].kingSide = false
+    else if piece is 'rook'
+      for side in ['queenSide', 'kingSide']
+        if move.from is rookStarts[color][side]
+          @castlingStatus[color][side] = false
+
+  _updateEnPassantStatus: (move) ->
+    {piece, color} = @status.board.get move.from
+    enemyColor = if color is 'light' then 'dark' else 'light'
+    @enPassantStatus[enemyColor] = null
+    return if piece isnt 'pawn'
+    [fileFrom, rowFrom] = field.split move.from
+    [fileTo, rowTo] = field.split move.to
+    if fileFrom is fileTo and Math.abs(rowFrom - rowTo) is 2
+      @enPassantStatus[enemyColor] =
+        move: fileFrom + ((rowFrom + rowTo) / 2)
+        capture: move.to
 
   _getPossibleMoves: (f) =>
     if f not of @moveCache
@@ -41,16 +81,16 @@ class LogicComponent
     return @moveCache[f]
 
   _calculatePossibleMoves: (f) ->
-    # Dummy
-    return switch @status.board.get(f).piece
-      when 'pawn' then getPawnMoves f, @status.board
+    {piece, color} = @status.board.get(f)
+    return switch piece
+      when 'pawn' then getPawnMoves f, @status.board, @enPassantStatus[color]
       when 'knight' then getKnightMoves f, @status.board
       when 'king' then getKingMoves f, @status.board
       when 'rook' then getRookMoves f, @status.board
       when 'bishop' then getBishopMoves f, @status.board
       when 'queen' then getQueenMoves f, @status.board
 
-getPawnMoves = (f, board) ->
+getPawnMoves = (f, board, enPassantStatus) ->
   color = board.get(f).color
   moves = []
   maxStep = if field.split(f)[1] is pawnStartRow[color] then 2 else 1
@@ -61,9 +101,11 @@ getPawnMoves = (f, board) ->
   for offset in pawnCapture[color]
     to = field.offsetBy f, offset
     # Implicit in range check
-    capture = board.get to
-    if capture? and capture.color isnt color
+    piece = board.get to
+    if piece? and piece.color isnt color
       moves.push {from: f, to: to, capture: to}
+    else if to is enPassantStatus?.move
+      moves.push {from: f, to: to, capture: enPassantStatus.capture}
   return moves
 
 getKnightMoves = (f, board) ->
