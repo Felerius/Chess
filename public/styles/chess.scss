@@ -1,17 +1,36 @@
 $dark-field-color: #555;
 $light-field-color: #FFF;
-$select-highlight-color: #00F;
+$select-color: #00F;
+$move-color: #0F0;
+$capture-color: #F00;
+$select-highlight-weight: 100%;
+$highlight-weight: 85%;
+
+@mixin type-highlight($type, $normal-color, $type-color, $weight) {
+    &.#{$type} {
+        $color: mix($type-color, $normal-color, $weight);
+        fill: $color;
+        &.inactive {
+            fill: grayscale($color);
+        }
+    }
+}
+
+@mixin highlights($normal-color) {
+    @include type-highlight("selected", $normal-color, $select-color, $select-highlight-weight);
+    @include type-highlight("move", $normal-color, $move-color, $highlight-weight);
+    @include type-highlight("capture", $normal-color, $capture-color, $highlight-weight);
+}
 
 .field {
     stroke: none;
     &.dark {
         fill: $dark-field-color;
+        @include highlights($dark-field-color);
     }
     &.light {
         fill: $light-field-color;
-    }
-    &.selected {
-        fill: $select-highlight-color;
+        @include highlights($light-field-color);
     }
 }
 

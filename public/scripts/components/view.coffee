@@ -1,6 +1,5 @@
 svgNs = 'http://www.w3.org/2000/svg'
 xlinkNs = 'http://www.w3.org/1999/xlink'
-selectedClass = 'selected'
 
 class ViewComponent
   constructor: (@msgSystem, @data) ->
@@ -15,16 +14,21 @@ class ViewComponent
       for svgField in fields
         svgField.classList.remove cssClass
 
-  _addHighlight: (f, cssClass) ->
+  _addClasses: (f, cssClasses...) =>
     svgField = document.getElementById f
-    svgField.classList.add cssClass
-    @highlights[cssClass] ?= []
-    @highlights[cssClass].push svgField
+    for cls in cssClasses
+      svgField.classList.add cls
+      @highlights[cls] ?= []
+      @highlights[cls].push svgField
 
   _onPieceSelected: (selected, moves, active) =>
     @_clearHighlights()
-    if selected?
-      @_addHighlight selected, selectedClass
+    return if not selected?
+    setClass = if active then @_addClasses else (f, cls) => @_addClasses(f, cls, 'inactive')
+    setClass selected, 'selected'
+    for move in moves
+      cls = if move.capture? then 'capture' else 'move'
+      setClass move.to, cls
 
   _createPieces: ->
     pieceNum = 0
