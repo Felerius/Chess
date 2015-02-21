@@ -11,5 +11,11 @@ app.get '/', (req, res) ->
 io.on 'connection', (socket) ->
   socket.emit 'init',
     side: 'light'
+  fileNum = 0
+  onMove = (move) ->
+    file = String.fromCharCode('a'.charCodeAt(0) + fileNum)
+    fileNum++
+    socket.emit 'move', {from: file + '7', to: file + '5'}
+  socket.on 'move', onMove
 
 http.listen 8000
