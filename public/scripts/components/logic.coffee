@@ -1,13 +1,31 @@
-class LogicComponent
-  constructor: (@msgSystem, @data) ->
-    @msgSystem.on 'init', () =>
-      @msgSystem.send 'movesCalculated', @_calculatePossibleMoves()
+Board = require '../board'
 
-  _calculatePossibleMoves: () ->
+class LogicComponent
+  constructor: (@msgSystem, playerColor) ->
+    @status =
+      playerColor: playerColor
+      playerActive: playerColor is 'light'
+      board: new Board()
+      getPossibleMoves: @_getPossibleMoves
+    @moveCache = {}
+    @msgSystem.on 'init', @_onInit
+
+  _onInit: () =>
+    @msgSystem.send 'statusUpdated', @status, true
+
+  _onMove: (move) =>
+    @status.board.executeMove move
+    @status.playerActive = not @status.playerActive
+    @moveCache = {}
+    @msgSystem.send 'statusUpdated', @status, false
+
+  _getPossibleMoves: (f) =>
+    if f not of @moveCache
+      @moveCache[f] = @_calculatePossibleMoves f
+    return @moveCache[f]
+
+  _calculatePossibleMoves: (f) ->
     # Dummy
-    moves = {}
-    for f, piece of @data.board.all()
-      moves[f] = [{from: f, to: 'e4'}]
-    return moves
+    return [{from: f, to: 'e4'}]
 
 module.exports = LogicComponent

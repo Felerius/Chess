@@ -1,5 +1,5 @@
 class NetworkComponent
-  constructor: (@msgSystem, @data, @socket) ->
+  constructor: (@msgSystem, @socket) ->
     @socket.on 'move', @onEnemyMove
     @msgSystem.on 'move', @onMoveMsg
 

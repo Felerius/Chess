@@ -38,4 +38,16 @@ class Board
 
   all: -> @pieces
 
+  executeMove: (move) ->
+    # We cannot rely on the move overriding the capture. See en passant
+    if move.capture?
+      @pieces[move.capture] = undefined
+    @_executePieceMove move.from, move.to
+    if move.secondaryMove?
+      @_executePieceMove move.secondaryMove.from, move.secondaryMove.to
+
+  _executePieceMove: (from, to) ->
+    @pieces[to] = @pieces[from]
+    @pieces[from] = undefined
+
 module.exports = Board

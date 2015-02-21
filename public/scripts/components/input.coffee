@@ -1,11 +1,11 @@
 field = require '../field'
 
 class InputComponent
-  constructor: (@msgSystem, @data, @playerColor) ->
+  constructor: (@msgSystem) ->
     @currentHighlighted = null
     @wasCurrentClicked = false
     @_addEventListeners()
-    @msgSystem.on 'movesCalculated', @_onMovesCalculated
+    @msgSystem.on 'statusUpdated', @_onStatusUpdated
 
   _addEventListeners: ->
     for f in field.all()
@@ -13,14 +13,14 @@ class InputComponent
       svgField.addEventListener 'click', @_onFieldClick
       svgField.addEventListener 'mouseover', @_onFieldMouseOver
 
-  _onMovesCalculated: (possibleMoves) =>
-    @possibleMoves = possibleMoves
+  _onStatusUpdated: (status, init) =>
+    @status = status
 
   _handleNonActiveHighlight: (f, isClick) ->
-    piece = @data.board.get f
+    piece = @status.board.get f
     # Test for inactive selection or hover
     if piece?
-      @msgSystem.send 'pieceSelected', f, @possibleMoves[f], false
+      @msgSystem.send 'pieceSelected', f, @status.getPossibleMoves(f), false
       @currentHighlighted = f
       @wasCurrentClicked = isClick
     else
@@ -29,7 +29,7 @@ class InputComponent
 
   _onFieldClick: (event) =>
     f = event.target.id
-    if @data.playerActive
+    if @status.playerActive
       # Test for move
       if @currentHighlighted? and @wasCurrentClicked
         move = @_tryFindMove f
@@ -38,10 +38,10 @@ class InputComponent
           @msgSystem.send 'pieceSelected', null
           @currentHighlighted = null
           return
-      piece = @data.board.get f
+      piece = @status.board.get f
       # Test for active selection
-      if piece?.color is @playerColor
-        @msgSystem.send 'pieceSelected', f, @possibleMoves[f], true
+      if piece?.color is @status.playerColor
+        @msgSystem.send 'pieceSelected', f, @status.getPossibleMoves(f), true
         @currentHighlighted = f
         @wasCurrentClicked = true
         return
@@ -52,7 +52,7 @@ class InputComponent
     @_handleNonActiveHighlight event.target.id, false
 
   _tryFindMove: (f) ->
-    moves = @possibleMoves[@currentHighlighted]
+    moves = @status.getPossibleMoves(@currentHighlighted)
     if moves?
       return (m for m in moves when m.to is f)[0]
     return null

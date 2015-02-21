@@ -22,14 +22,11 @@ logMessage = (type, args, numListeners) ->
 socket = io()
 socket.on 'init', (msgData) ->
   assignFields msgData.side
-  data =
-    playerActive: msgData.side is 'light'
-    board: new Board()
   msgSystem = new MessageSystem(logMessage)
-  network = new NetworkComponent(msgSystem, data, socket)
-  input = new InputComponent(msgSystem, data, msgData.side)
-  view = new ViewComponent(msgSystem, data)
-  logic = new LogicComponent(msgSystem, data)
+  network = new NetworkComponent(msgSystem, socket)
+  input = new InputComponent(msgSystem, msgData.side)
+  view = new ViewComponent(msgSystem)
+  logic = new LogicComponent(msgSystem)
   # Gives components the chance to perform initialization that relies on
   # the other components existing
   msgSystem.send 'init'

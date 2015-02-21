@@ -2,13 +2,17 @@ svgNs = 'http://www.w3.org/2000/svg'
 xlinkNs = 'http://www.w3.org/1999/xlink'
 
 class ViewComponent
-  constructor: (@msgSystem, @data) ->
+  constructor: (@msgSystem) ->
     @svgBoard = document.getElementById 'board'
     @fieldToPieceId = {}
     @highlights = {}
     @_createPieces()
     @msgSystem.on 'pieceSelected', @_onPieceSelected
     @msgSystem.on 'move', @_onMove
+    @msgSystem.on 'statusUpdated', @_onStatusUpdated
+
+  _onStatusUpdated: (status, init) =>
+    @_createPieces(status.board.all()) if init
 
   _clearHighlights: ->
     for cssClass, fields of @highlights
@@ -47,9 +51,9 @@ class ViewComponent
     @fieldToPieceId[to] = @fieldToPieceId[from]
     @fieldToPieceId[from] = undefined
 
-  _createPieces: ->
+  _createPieces: (pieces) ->
     pieceNum = 0
-    for f, piece of @data.board.all()
+    for f, piece of pieces
       [x, y] = @_getFieldPos f
       svgPiece = document.createElementNS svgNs, 'use'
       id = "piece_#{pieceNum}"
