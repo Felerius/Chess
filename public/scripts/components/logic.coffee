@@ -9,6 +9,7 @@ class LogicComponent
       getPossibleMoves: @_getPossibleMoves
     @moveCache = {}
     @msgSystem.on 'init', @_onInit
+    @msgSystem.on 'move', @_onMove
 
   _onInit: () =>
     @msgSystem.send 'statusUpdated', @status, true

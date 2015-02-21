@@ -24,9 +24,9 @@ socket.on 'init', (msgData) ->
   assignFields msgData.side
   msgSystem = new MessageSystem(logMessage)
   network = new NetworkComponent(msgSystem, socket)
-  input = new InputComponent(msgSystem, msgData.side)
+  input = new InputComponent(msgSystem)
   view = new ViewComponent(msgSystem)
-  logic = new LogicComponent(msgSystem)
+  logic = new LogicComponent(msgSystem, msgData.side)
   # Gives components the chance to perform initialization that relies on
   # the other components existing
   msgSystem.send 'init'
