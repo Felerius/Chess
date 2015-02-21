@@ -12,7 +12,6 @@ class InputComponent
       svgField = document.getElementById f
       svgField.addEventListener 'click', @_onFieldClick
       svgField.addEventListener 'mouseover', @_onFieldMouseOver
-      svgField.addEventListener 'mouseout', @_onFieldMouseOut
 
   _onMovesCalculated: (possibleMoves) =>
     @possibleMoves = possibleMoves
@@ -51,8 +50,6 @@ class InputComponent
   _onFieldMouseOver: (event) =>
     return if @currentHighlighted? and @wasCurrentClicked
     @_handleNonActiveHighlight event.target.id, false
-
-  _onFieldMouseOut: (event) =>
 
   _tryFindMove: (f) ->
     moves = @possibleMoves[@currentHighlighted]
