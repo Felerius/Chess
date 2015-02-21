@@ -43,6 +43,9 @@ class Board
 
   kingPosition: (color) -> @king[color]
 
+  # Return a board with a move simulated. Supports "get" and "kingPosition".
+  simulateMove: (move) -> new MoveSimulatedBoard(move, this)
+
   executeMove: (move) ->
     {piece, color} = @pieces[move.from]
     if piece is 'king'
@@ -57,5 +60,23 @@ class Board
   _executePieceMove: (from, to) ->
     @pieces[to] = @pieces[from]
     @pieces[from] = undefined
+
+class MoveSimulatedBoard
+  constructor: (@move, @original) ->
+    @movedPiece = @original.get(@move.from)
+
+  get: (f) ->
+    return switch f
+      when move.from, move.secondaryMove?.from then undefined
+      when move.to then @original.get(move.from)
+      # Only needed for en passant
+      when move.capture then undefined
+      when move.secondaryMove?.to then @original.get(move.secondaryMove.to)
+      else @original.get(f)
+
+  kingPosition: (color) ->
+    if color is @movedPiece.color and @movedPiece.piece is 'king'
+      return @movedPiece.to
+    return @original.kingPosition color
 
 module.exports = Board
