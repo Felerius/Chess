@@ -65,7 +65,7 @@ class LogicComponent
 
   _updateEnPassantStatus: (move) ->
     {piece, color} = @status.board.get move.from
-    enemyColor = if color is 'light' then 'dark' else 'light'
+    enemyColor = getOppositeColor color
     @enPassantStatus[enemyColor] = null
     return if piece isnt 'pawn'
     [fileFrom, rowFrom] = field.split move.from
@@ -153,5 +153,45 @@ getDirectionalMovesMultiple = (f, board, directions) ->
           moves.push {from: f, to: to, capture: to}
         break
   return moves
+
+# Only requires the "kingPosition" and "get" methods on the board
+isInCheck = (color, board) ->
+  king = board.kingPosition color
+  enemyColor = getOppositeColor color
+  isSpecificEnemy = (f, types) ->
+    piece = board.get f
+    return piece? and piece.color is enemyColor and piece.piece in types
+  # Test pawn
+  # The offset for a color are the reversed ones of the other color
+  for offset in pawnCapture[color]
+    return true if isSpecificEnemy field.offsetBy(king, offset), ['pawn']
+  # Test knight
+  for offset in knightJumps
+    return true if isSpecificEnemy field.offsetBy(king, offset), ['knight']
+  # Test king
+  # Needed for testing possible moves
+  offset = field.getOffset king, board.kingPosition(enemyColor)
+  if Math.abs(offset[0]) is 1 and Math.abs(offset[1]) is 1
+    return true
+  # Test queen, rook and bishop
+  tests = [
+    [diagonals, ['queen', 'bishop']]
+    [straights, ['queen', 'rook']]
+  ]
+  for [directions, types] in tests
+    for dir in directions
+      step = 0
+      while true
+        step++
+        f = field.offsetBy king, dir, step
+        break if not field.inRange f
+        piece = board.get f
+        if piece?
+          return true if isSpecificEnemy f, types
+          break
+  return false
+
+
+getOppositeColor = (color) -> if color is 'light' then 'dark' else 'light'
 
 module.exports = LogicComponent

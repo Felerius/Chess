@@ -14,6 +14,11 @@ module.exports =
     [fileNum, rowNum] = @toNumbers f
     return @fromNumbers fileNum + o[0] * times, rowNum + o[1] * times
 
+  getOffset: (from, to) ->
+    [fileFrom, rowFrom] = @toNumbers from
+    [fileTo, rowTo] = @toNumbers to
+    return [fileTo - fileFrom, rowTo - rowFrom]
+
   inRange: (f) -> f.length is 2 and 'a' <= f[0] <= 'h' and '1' <= f[1] <= '8'
 
   all:  ->
