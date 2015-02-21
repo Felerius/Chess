@@ -15,6 +15,10 @@ class InputComponent
 
   _onStatusUpdated: (status, init) =>
     @status = status
+    if @currentHighlighted?
+      moves = status.getPossibleMoves @currentHighlighted
+      active = status.playerActive and @wasCurrentClicked
+      @msgSystem.send 'pieceSelected', @currentHighlighted, moves, active
 
   _handleNonActiveHighlight: (f, isClick) ->
     piece = @status.board.get f
