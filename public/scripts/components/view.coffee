@@ -8,6 +8,7 @@ class ViewComponent
     @highlights = {}
     @_createPieces()
     @msgSystem.on 'pieceSelected', @_onPieceSelected
+    @msgSystem.on 'move', @_onMove
 
   _clearHighlights: ->
     for cssClass, fields of @highlights
@@ -29,6 +30,22 @@ class ViewComponent
     for move in moves
       cls = if move.capture? then 'capture' else 'move'
       setClass move.to, cls
+
+  _onMove: (move) =>
+    if move.capture?
+      document.getElementById(@fieldToPieceId[move.capture]).remove()
+      @fieldToPieceId[move.capture] = undefined
+    @_executeMove move.from, move.to
+    if move.secondaryMove?
+      @_executeMove move.secondaryMove.from, move.secondaryMove.to
+
+  _executeMove: (from, to) ->
+    svgPiece = document.getElementById(@fieldToPieceId[from])
+    [x, y] = @_getFieldPos to
+    svgPiece.setAttribute 'x', x
+    svgPiece.setAttribute 'y', y
+    @fieldToPieceId[to] = @fieldToPieceId[from]
+    @fieldToPieceId[from] = undefined
 
   _createPieces: ->
     pieceNum = 0
