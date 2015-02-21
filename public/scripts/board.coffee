@@ -33,12 +33,20 @@ class Board
       h8: { piece: 'rook', color: 'dark' }
       a1: { piece: 'rook', color: 'light' }
       h1: { piece: 'rook', color: 'light' }
+    @king =
+      dark: 'e8'
+      light: 'e1'
 
   get: (f) -> @pieces[f]
 
   all: -> @pieces
 
+  kingPosition: (color) -> @king[color]
+
   executeMove: (move) ->
+    {piece, color} = @pieces[move.from]
+    if piece is 'king'
+      @king[color] = move.to
     # We cannot rely on the move overriding the capture. See en passant
     if move.capture?
       @pieces[move.capture] = undefined
