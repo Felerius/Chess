@@ -1,0 +1,40 @@
+mixin fieldlight(x, y)
+  use.field.light(x=100*x, y=100*y, xlink:href='#field')
+
+mixin fielddark(x, y)
+  use.field.dark(x=100*x, y=100*y, xlink:href='#field')
+
+svg#board(viewBox='0 0 800 800')
+  defs
+    rect#field(width=100, height=100)
+    g.piece#bishop_dark
+      include ./pieces/bishop_dark.svg
+    g.piece#bishop_light
+      include ./pieces/bishop_light.svg
+    g.piece#king_dark
+      include ./pieces/king_dark.svg
+    g.piece#king_light
+      include ./pieces/king_light.svg
+    g.piece#knight_dark
+      include ./pieces/knight_dark.svg
+    g.piece#knight_light
+      include ./pieces/knight_light.svg
+    g.piece#pawn_dark
+      include ./pieces/pawn_dark.svg
+    g.piece#pawn_light
+      include ./pieces/pawn_light.svg
+    g.piece#queen_dark
+      include ./pieces/queen_dark.svg
+    g.piece#queen_light
+      include ./pieces/queen_light.svg
+    g.piece#rook_dark
+      include ./pieces/rook_dark.svg
+    g.piece#rook_light
+      include ./pieces/rook_light.svg
+  each x in [0, 1, 2, 3, 4, 5, 6, 7]
+    each y in [0, 1, 2, 3, 4, 5, 6, 7]
+      if (x + y) % 2 === 0
+        +fieldlight(x, y)
+      else
+        +fielddark(x, y)
+  rect.outline(x=0, y=0, width=800, height=800)
