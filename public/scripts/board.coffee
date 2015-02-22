@@ -76,7 +76,7 @@ class MoveSimulatedBoard
 
   kingPosition: (color) ->
     if color is @movedPiece.color and @movedPiece.piece is 'king'
-      return @movedPiece.to
+      return @move.to
     return @original.kingPosition color
 
 module.exports = Board
