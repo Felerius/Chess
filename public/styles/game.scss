@@ -1,0 +1,38 @@
+$split-weight: 70%;
+$board-margin: 5%;
+
+.board-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 100% - $split-weight;
+    bottom: 0;
+    &.vertical {
+        right: 0;
+        bottom: 100% - $split-weight;
+    }
+}
+
+.side-panel {
+    position: absolute;
+    top: 0;
+    left: $split-weight;
+    right: 0;
+    bottom: 0;
+    background: #ddd;
+    &.vertical {
+        top: $split-weight;
+        left: 0;
+    }
+}
+
+#board {
+    position: absolute;
+    // Sets a minimum margin based on the relative dimension!
+    // So left/right: width, top/bottom: height
+    // Note that this is different that the default margin behaviour
+    top: $board-margin;
+    left: $board-margin;
+    height: 100% - 2*$board-margin;
+    width: 100% - 2*$board-margin;
+}
