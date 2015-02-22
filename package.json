@@ -5,6 +5,7 @@
   "author": "David Stangl",
   "dependencies": {
     "express": "~4.11.1",
+    "jade": "^1.9.2",
     "socket.io": "^1.3.2",
     "socket.io-client": "^1.3.2"
   },
