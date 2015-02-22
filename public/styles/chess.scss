@@ -1,35 +1,36 @@
 $dark-field-color: #555;
 $light-field-color: #FFF;
-$selection-highlight-color: #00F;
-$move-highlight-color: #0F0;
-$capture-highlight-color: #F00;
+$select-color: #00F;
+$move-color: #0F0;
+$capture-color: #F00;
+$select-highlight-weight: 100%;
 $highlight-weight: 85%;
 
-@mixin moveHighlightable($normal-color) {
-    &.moveHighlight {
-        fill: mix($move-highlight-color,
-                  $normal-color,
-                  $highlight-weight);
+@mixin type-highlight($type, $normal-color, $type-color, $weight) {
+    &.#{$type} {
+        $color: mix($type-color, $normal-color, $weight);
+        fill: $color;
+        &.inactive {
+            fill: grayscale($color);
+        }
     }
-    &.captureHighlight {
-        fill: mix($capture-highlight-color,
-                  $normal-color,
-                  $highlight-weight);
-    }
+}
+
+@mixin highlights($normal-color) {
+    @include type-highlight("selected", $normal-color, $select-color, $select-highlight-weight);
+    @include type-highlight("move", $normal-color, $move-color, $highlight-weight);
+    @include type-highlight("capture", $normal-color, $capture-color, $highlight-weight);
 }
 
 .field {
     stroke: none;
     &.dark {
         fill: $dark-field-color;
-        @include moveHighlightable($dark-field-color);
+        @include highlights($dark-field-color);
     }
     &.light {
         fill: $light-field-color;
-        @include moveHighlightable($light-field-color);
-    }
-    &.selectionHighlight {
-        fill: $selection-highlight-color;
+        @include highlights($light-field-color);
     }
 }
 
