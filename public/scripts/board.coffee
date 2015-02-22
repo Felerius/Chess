@@ -67,11 +67,11 @@ class MoveSimulatedBoard
 
   get: (f) ->
     return switch f
-      when move.from, move.secondaryMove?.from then undefined
-      when move.to then @original.get(move.from)
+      when @move.from, @move.secondaryMove?.from then undefined
+      when @move.to then @original.get(@move.from)
       # Only needed for en passant
-      when move.capture then undefined
-      when move.secondaryMove?.to then @original.get(move.secondaryMove.to)
+      when @move.capture then undefined
+      when @move.secondaryMove?.to then @original.get(@move.secondaryMove.to)
       else @original.get(f)
 
   kingPosition: (color) ->
