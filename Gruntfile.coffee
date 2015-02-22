@@ -1,4 +1,5 @@
 serverScripts = ['*.coffee', '!Gruntfile.coffee']
+simpleClientScripts = ['public/scripts/*.coffee']
 styles = ['public/styles/**/*.scss']
 browserifyBundles =
   'public/scripts/game.bundle.js': 'public/scripts/game/index.coffee'
@@ -10,6 +11,12 @@ module.exports = (grunt) ->
         files: [
           expand: true
           src: serverScripts
+          ext: '.js'
+        ]
+      compileSimpleClientScripts:
+        files: [
+          expand: true
+          src: simpleClientScripts
           ext: '.js'
         ]
     sass:
@@ -40,13 +47,17 @@ module.exports = (grunt) ->
       serverScripts:
         files: serverScripts
         tasks: ['coffee:compileServer']
+      simpleClientScripts:
+        files: simpleClientScripts
+        tasks: ['coffee:compileSimpleClientScripts']
       styles:
         files: styles
         tasks: ['sass:styles']
     clean:
       serverScripts: ['*.js']
+      simpleClientScripts: ['public/scripts/*.js']
       styles: ['public/styles/**/*.css']
-      clientScript: ['public/scripts/**/*.bundle.js']
+      clientScripts: ['public/scripts/**/*.bundle.js']
     nodemon:
       dev:
         script: 'server.js'
@@ -72,5 +83,5 @@ module.exports = (grunt) ->
     'grunt-browserify'
   ]
 
-  grunt.registerTask 'compile', ['coffee:compileServer', 'sass:styles', 'browserify:compileClientScripts']
+  grunt.registerTask 'compile', ['coffee', 'sass:styles', 'browserify:compileClientScripts']
   grunt.registerTask 'automate', ['clean', 'compile', 'concurrent:dev']
