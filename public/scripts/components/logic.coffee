@@ -81,14 +81,24 @@ class LogicComponent
     return @moveCache[f]
 
   _calculatePossibleMoves: (f) ->
-    {piece, color} = @status.board.get(f)
-    return switch piece
-      when 'pawn' then getPawnMoves f, @status.board, @enPassantStatus[color]
-      when 'knight' then getKnightMoves f, @status.board
-      when 'king' then getKingMoves f, @status.board
-      when 'rook' then getRookMoves f, @status.board
-      when 'bishop' then getBishopMoves f, @status.board
-      when 'queen' then getQueenMoves f, @status.board
+    color = @status.board.get(f).color
+    return getMoves f, @status.board, @enPassantStatus[color], @castlingStatus[color]
+
+getMoves = (f, board, enPassantStatus, castlingStatus) ->
+  {color, piece} = board.get(f)
+  moves = switch piece
+    when 'pawn' then getPawnMoves f, board, enPassantStatus
+    when 'knight' then getKnightMoves f, board
+    when 'king' then getKingMoves f, board
+    when 'rook' then getRookMoves f, board
+    when 'bishop' then getBishopMoves f, board
+    when 'queen' then getQueenMoves f, board
+  legalMoves = []
+  for move in moves
+    simulatedBoard = board.simulateMove move
+    if not isInCheck color, simulatedBoard
+      legalMoves.push move
+  return legalMoves
 
 getPawnMoves = (f, board, enPassantStatus) ->
   color = board.get(f).color
