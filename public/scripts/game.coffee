@@ -15,14 +15,10 @@ assignFields = (side) ->
     fileNum = if side is 'light' then col else 7 - col
     svgField.id = field.fromNumbers fileNum, rankNum
 
-logMessage = (type, args, numListeners) ->
-  console.log("#{type} (#{numListeners} listeners)")
-  console.log(args)
-
 socket = io()
 socket.on 'init', (msgData) ->
   assignFields msgData.side
-  msgSystem = new MessageSystem(logMessage)
+  msgSystem = new MessageSystem()
   network = new NetworkComponent(msgSystem, socket)
   input = new InputComponent(msgSystem)
   view = new ViewComponent(msgSystem)

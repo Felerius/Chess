@@ -1,5 +1,6 @@
 class MessageSystem
   constructor: (@logger) ->
+    @logger ?= () ->
     @handlers = {}
 
   on: (type, handler) ->
@@ -10,9 +11,9 @@ class MessageSystem
   send: (type, args...) ->
     handlers = @handlers[type]
     if not handlers?
-      @logger(type, args, 0) if @logger?
+      @logger(type, args, 0)
     else
-      @logger(type, args, handlers.length) if @logger?
+      @logger(type, args, handlers.length)
       for handler in @handlers[type]
         handler args...
 
