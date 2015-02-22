@@ -76,7 +76,10 @@ class LogicComponent
     # Only testing primary move, only secondary move is castling
     {piece, color} = @status.board.get move.from
     if piece is 'king'
-      @castlingStatus[color].queenSide = @castlingStatus[color].kingSide = false
+      # Other forms of assignment set false for both colors what?!?
+      @castlingStatus[color] =
+        queenSide: false
+        kingSide: false
     else if piece is 'rook'
       for side in ['queenSide', 'kingSide']
         if move.from is rookStarts[color][side]
