@@ -10,14 +10,19 @@ app.use express.static(__dirname + '/public')
 app.get '/', (req, res) ->
     res.render 'game'
 
+waitingConnection = null
+
 io.on 'connection', (socket) ->
-  socket.emit 'init',
-    side: 'light'
-  fileNum = 0
-  onMove = (move) ->
-    file = String.fromCharCode('a'.charCodeAt(0) + fileNum)
-    fileNum++
-    socket.emit 'move', {from: file + '7', to: file + '5'}
-  socket.on 'move', onMove
+  if not waitingConnection?
+    waitingConnection = socket
+    return
+  waitingConnection.enemy = socket
+  socket.enemy = waitingConnection
+  side = if Math.random() > 0.5 then 'light' else 'dark'
+  socket.emit 'init', {side: side}
+  socket.enemy.emit 'init', {side: if side is 'light' then 'dark' else 'light'}
+  for s in [socket, socket.enemy]
+    s.on 'move', (move) -> @enemy.emit 'move', move
+  waitingConnection = null
 
 http.listen 8000
