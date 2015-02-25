@@ -43,7 +43,6 @@ class InputComponent
     f = event.target.id
     if @status.playerActive
       # Test for move
-      pieceColor = j
       if @currentHighlighted? and @wasCurrentClicked and @status.playerColor is @status.board.get(@currentHighlighted).color
         move = @_tryFindMove f
         if move?
@@ -51,8 +50,8 @@ class InputComponent
           @msgSystem.send 'pieceSelected', null
           @currentHighlighted = null
           return
-      piece = @status.board.get f
       # Test for active selection
+      piece = @status.board.get f
       if piece?.color is @status.playerColor
         @msgSystem.send 'pieceSelected', f, @status.getPossibleMoves(f), true
         @currentHighlighted = f
