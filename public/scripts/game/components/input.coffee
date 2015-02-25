@@ -43,7 +43,8 @@ class InputComponent
     f = event.target.id
     if @status.playerActive
       # Test for move
-      if @currentHighlighted? and @wasCurrentClicked
+      pieceColor = j
+      if @currentHighlighted? and @wasCurrentClicked and @status.playerColor is @status.board.get(@currentHighlighted).color
         move = @_tryFindMove f
         if move?
           @msgSystem.send 'move', move
