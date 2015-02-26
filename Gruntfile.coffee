@@ -10,3 +10,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build', ['coffee', 'sass', 'copy', 'browserify:compile']
   grunt.registerTask 'serve', ['clean', 'build', 'concurrent:dev']
+  grunt.registerTask 'deployOpenshift', ['clean', 'build', 'buildcontrol:openshift']
