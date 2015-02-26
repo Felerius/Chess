@@ -1,78 +1,55 @@
-serverScripts = ['*.coffee', '!Gruntfile.coffee']
-simpleClientScripts = ['public/scripts/*.coffee']
-styles = ['public/styles/**/*.scss']
-browserifyBundles =
-  'public/scripts/game.bundle.js': 'public/scripts/game/index.coffee'
-
 module.exports = (grunt) ->
   grunt.initConfig
     coffee:
-      compileServer:
+      server:
         files: [
           expand: true
-          src: serverScripts
+          cwd: 'server'
+          src: ['**/*.coffee']
+          dest: 'dist/'
           ext: '.js'
         ]
-      compileSimpleClientScripts:
+      client:
         files: [
           expand: true
-          src: simpleClientScripts
+          cwd: 'client'
+          src: ['scripts/**/*.coffee', '!scripts/game/**/*.coffee']
+          dest: 'dist/public/'
           ext: '.js'
         ]
     sass:
       styles:
         files: [
           expand: true
-          src: styles
+          cwd: 'client'
+          src: ['styles/**/*.scss']
+          dest: 'dist/public/'
           ext: '.css'
         ]
     browserify:
-      compileClientScripts:
-        files: browserifyBundles
+      game:
+        files:
+          'dist/public/scripts/game.bundle.js': 'client/scripts/game/index.coffee'
         options:
           transform: ['coffeeify']
           browserifyOptions:
             extensions: ['.coffee']
             debug: true
-      watchClientScripts:
-        files: browserifyBundles
-        options:
-          transform: ['coffeeify']
-          watch: true
-          keepAlive: true
-          browserifyOptions:
-            extensions: ['.coffee']
-            debug: true
-    watch:
-      serverScripts:
-        files: serverScripts
-        tasks: ['coffee:compileServer']
-      simpleClientScripts:
-        files: simpleClientScripts
-        tasks: ['coffee:compileSimpleClientScripts']
-      styles:
-        files: styles
-        tasks: ['sass:styles']
-    clean:
-      serverScripts: ['*.js']
-      simpleClientScripts: ['public/scripts/*.js']
-      styles: ['public/styles/**/*.css']
-      clientScripts: ['public/scripts/**/*.bundle.js']
-    nodemon:
-      dev:
-        script: 'server.js'
-        options:
-          ignore: ['node_modules/', 'public/']
-          ext: 'js'
-    concurrent:
-      dev: ['nodemon:dev', 'watch', 'browserify:watchClientScripts']
-      options:
-        logConcurrentOutput: true
+    copy:
+      views:
+        files: [
+          expand: true
+          cwd: 'server'
+          src: ['views/**']
+          dest: 'dist/'
+        ]
+    clean: ['dist/*']
 
   grunt.loadNpmTasks p for p in [
     'grunt-contrib-coffee'
     'grunt-contrib-watch'
     'grunt-contrib-clean'
+    'grunt-contrib-copy'
     'grunt-nodemon'
     'grunt-concurrent'
     # Uses libsass, a c library, quicker then the ruby version but potentially
@@ -83,5 +60,4 @@ module.exports = (grunt) ->
     'grunt-browserify'
   ]
 
-  grunt.registerTask 'compile', ['coffee', 'sass:styles', 'browserify:compileClientScripts']
-  grunt.registerTask 'automate', ['clean', 'compile', 'concurrent:dev']
+  grunt.registerTask 'build', ['coffee', 'sass', 'copy', 'browserify:game']
