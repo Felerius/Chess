@@ -1,0 +1,5 @@
+coffee:client
+coffee:server
+sass:styles
+copy:views
+browserify:compile

@@ -1,13 +1,15 @@
 module.exports = (grunt) ->
   require('load-grunt-tasks')(grunt)
 
+  # Load and apply config
   config = {}
-  for file in grunt.file.expand {cwd: 'build'}, ['*.coffee']
+  for file in grunt.file.expand {cwd: 'build'}, '*.coffee'
     taskname = file.replace /\.coffee/, ''
     config[taskname] = require './build/' + file
 
   grunt.initConfig config
 
-  grunt.registerTask 'build', ['coffee:client', 'coffee:server', 'sass', 'copy:views', 'browserify:compile']
-  grunt.registerTask 'serve', ['clean', 'build', 'concurrent:dev']
-  grunt.registerTask 'deployOpenshift', ['clean', 'build', 'copy:packageJson', 'coffee:openshiftConfig', 'buildcontrol:openshift']
+  # Load tasks
+  for file in grunt.file.expand {cwd: 'build/tasks'}, '*'
+    tasks = grunt.file.read('build/tasks/' + file).match /[^\r\n]+/g
+    grunt.registerTask file, tasks
