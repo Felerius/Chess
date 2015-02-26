@@ -8,6 +8,6 @@ module.exports = (grunt) ->
 
   grunt.initConfig config
 
-  grunt.registerTask 'build', ['coffee', 'sass', 'copy', 'browserify:compile']
+  grunt.registerTask 'build', ['coffee', 'sass', 'copy:views', 'browserify:compile']
   grunt.registerTask 'serve', ['clean', 'build', 'concurrent:dev']
-  grunt.registerTask 'deployOpenshift', ['clean', 'build', 'buildcontrol:openshift']
+  grunt.registerTask 'deployOpenshift', ['clean', 'build', 'copy:packageJson', 'buildcontrol:openshift']

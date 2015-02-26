@@ -6,3 +6,6 @@ module.exports =
       src: ['**']
       dest: 'dist/views'
     ]
+  packageJson:
+    files:
+      'dist/package.json': 'package.json'
