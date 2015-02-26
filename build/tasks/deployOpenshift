@@ -2,4 +2,4 @@ clean
 build
 copy:packageJson
 coffee:openshiftConfig
-buildcontrol:openshif Load taskst
+buildcontrol:openshiftaskst
