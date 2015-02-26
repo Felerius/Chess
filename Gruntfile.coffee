@@ -8,4 +8,5 @@ module.exports = (grunt) ->
 
   grunt.initConfig config
 
-  grunt.registerTask 'build', ['coffee', 'sass', 'copy', 'browserify:game']
+  grunt.registerTask 'build', ['coffee', 'sass', 'copy', 'browserify:compile']
+  grunt.registerTask 'serve', ['clean', 'build', 'concurrent:dev']

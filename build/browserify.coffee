@@ -1,9 +1,16 @@
+bundles =
+  'dist/public/scripts/game.bundle.js': 'client/scripts/game/index.coffee'
+
 module.exports =
-  game:
-    files:
-      'dist/public/scripts/game.bundle.js': 'client/scripts/game/index.coffee'
+  options:
+    transform: ['coffeeify']
+    browserifyOptions:
+      extensions: ['.coffee']
+      debug: true
+  compile:
+    files: bundles
+  watch:
+    files: bundles
     options:
-      transform: ['coffeeify']
-      browserifyOptions:
-        extensions: ['.coffee']
-        debug: true
+      watch: true
+      keepAlive: true
