@@ -222,7 +222,7 @@ isInCheck = (color, board) ->
   # Test king
   # Needed for testing possible moves
   offset = field.getOffset king, board.kingPosition(enemyColor)
-  if Math.abs(offset[0]) is 1 and Math.abs(offset[1]) is 1
+  if -1 <= offset[0] <= 1 and -1 <= offset[1] <= 1
     return true
   # Test queen, rook and bishop
   tests = [
