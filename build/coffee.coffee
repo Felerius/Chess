@@ -6,6 +6,8 @@ module.exports =
       src: ['**/*.coffee']
       dest: 'dist'
       ext: '.js'
+      # Needed for things like config.default.coffee
+      extDot: 'last'
     ]
   client:
     files: [
