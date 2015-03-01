@@ -1,4 +1,4 @@
 module.exports =
-  dev: ['nodemon:dev', 'watch', 'browserify:watch']
+  watch: ['watch', 'browserify:watch']
   options:
     logConcurrentOutput: true
