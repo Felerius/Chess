@@ -1,4 +1,5 @@
 serverConfig = require './config/server'
+
 express = require 'express'
 app = express()
 http = require('http').Server(app)
@@ -9,20 +10,6 @@ app.set 'view engine', 'jade'
 app.use express.static(__dirname + '/public')
 
 require('./routes')(app)
-
-waitingConnection = null
-
-io.on 'connection', (socket) ->
-  if not waitingConnection?
-    waitingConnection = socket
-    return
-  waitingConnection.enemy = socket
-  socket.enemy = waitingConnection
-  side = if Math.random() > 0.5 then 'light' else 'dark'
-  socket.emit 'init', {side: side}
-  socket.enemy.emit 'init', {side: if side is 'light' then 'dark' else 'light'}
-  for s in [socket, socket.enemy]
-    s.on 'move', (move) -> @enemy.emit 'move', move
-  waitingConnection = null
+require('./socket')(io)
 
 http.listen serverConfig.port, serverConfig.ip
