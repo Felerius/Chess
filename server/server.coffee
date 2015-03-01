@@ -8,8 +8,7 @@ app.set 'views', './views'
 app.set 'view engine', 'jade'
 app.use express.static(__dirname + '/public')
 
-app.get '/play', (req, res) ->
-    res.render 'game'
+require('./routes')(app)
 
 waitingConnection = null
 
