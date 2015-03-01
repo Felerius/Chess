@@ -1,14 +1,4 @@
-loadConfig = () ->
-  try
-    return require './config'
-  catch e
-    if e instanceof Error and e.code is 'MODULE_NOT_FOUND'
-      console.log 'Using default config'
-      return require './config.default'
-    else
-      throw e
-
-config = loadConfig()
+serverConfig = require './config/server'
 express = require 'express'
 app = express()
 http = require('http').Server(app)
@@ -36,4 +26,4 @@ io.on 'connection', (socket) ->
     s.on 'move', (move) -> @enemy.emit 'move', move
   waitingConnection = null
 
-http.listen config.port, config.ip
+http.listen serverConfig.port, serverConfig.ip

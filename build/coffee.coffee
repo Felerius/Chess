@@ -18,5 +18,10 @@ module.exports =
       ext: '.js'
     ]
   openshiftConfig:
-    files:
-      'dist/config.js': 'deployment/openshift.config.coffee'
+    files: [
+      expand: true
+      cwd: 'deployment/openshift/config'
+      src: ['**/*.coffee']
+      dest: 'dist/config'
+      ext: '.js'
+    ]
