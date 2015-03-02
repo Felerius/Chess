@@ -25,6 +25,7 @@ app.use cookieParser()
 app.use passport.initialize()
 app.use passport.session()
 
+require('./passport')(passport)
 require('./routes')(app)
 require('./socket')(io)
 
