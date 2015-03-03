@@ -4,12 +4,13 @@ express = require 'express'
 cookieParser = require 'cookie-parser'
 bodyParser = require 'body-parser'
 session = require 'express-session'
-http = require 'http'
-socketIO = require 'socket.io'
+http = require('http')
 
+# For some reason socket.io requires a server to be created it's constructor
+# method. Probably because socket.io also requires http.
 app = express()
 server = http.Server(app)
-io = socketIO(http)
+io = require('socket.io')(server)
 
 app.set 'views', './views'
 app.set 'view engine', 'jade'
