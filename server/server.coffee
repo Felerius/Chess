@@ -5,6 +5,7 @@ express = require 'express'
 cookieParser = require 'cookie-parser'
 bodyParser = require 'body-parser'
 session = require 'express-session'
+flash = require 'connect-flash'
 http = require 'http'
 socketIO = require 'socket.io'
 mongoose = require 'mongoose'
@@ -24,6 +25,7 @@ app.use bodyParser()
 app.use cookieParser()
 app.use passport.initialize()
 app.use passport.session()
+app.use flash()
 
 require('./passport')(passport)
 require('./routes')(app)
