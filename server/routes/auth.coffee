@@ -2,8 +2,9 @@ messages = require '../config/messages'
 User = require '../models/user'
 
 # Returns a middleware that tries to authenticate but saves all form fields
-# via req.flash on failure so that they can be kept
-# All form fields are saved in req.flash by the same name
+# via req.flash on failure so that they can be kept.
+# All form fields are saved in req.flash by the same name.
+# See http://passportjs.org/guide/authenticate/ section Custom callback
 authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redirectFailure) ->
   opts = { badRequestMessage: messages.missingCredentials }
   return (req, res, next) ->
