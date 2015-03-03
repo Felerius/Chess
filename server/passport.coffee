@@ -1,16 +1,29 @@
+messages = require './config/messages'
 User = require './models/user'
 LocalStrategy  = require('passport-local').Strategy
 
 module.exports = (passport) ->
-  # We dont use the (de)serialize methods of passport-local-mongoose,
-  # because we want to allow users to sign in via other methods
-  passport.serializeUser (user, done) -> done(null, user.id)
-  passport.deserializeUser (id, done) ->
-    User.findById id, (err, user) -> done(err, user)
+  passport.serializeUser (user, next) ->
+    next(null, user.id)
+  passport.deserializeUser (id, next) ->
+    User.findById id, (err, user) ->
+      next(err, user)
 
-  # The strategy created by User.createStrategy() would expect 'auth.local.email'
-  # as the name of the html form field.
-  passport.use new LocalStrategy({
+  # Inspired by https://scotch.io/tutorials/easy-node-authentication-setup-and-local
+  passport.use 'local-register', new LocalStrategy({
       usernameField: 'email'
       passwordField: 'password'
-    }, User.authenticate())
+    }, (email, password, next) ->
+      process.nextTick () ->
+        User.findOne { 'auth.local.email': email }, (err, user) ->
+          return next(err) if err
+          if user
+            return next(null, false, messages.emailInUse)
+          user = new User()
+          user.auth.local.email = email
+          user.setPassword password, (err) ->
+            return next(err) if err
+            user.save (err) ->
+              return next(err) if err
+              return next(null, user)
+    )

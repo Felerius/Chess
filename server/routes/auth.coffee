@@ -1,4 +1,25 @@
+messages = require '../config/messages'
 User = require '../models/user'
+
+# Returns a middleware that tries to authenticate but saves all form fields
+# via req.flash on failure so that they can be kept
+# All form fields are saved in req.flash by the same name
+authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redirectFailure) ->
+  opts = { badRequestMessage: messages.missingCredentials }
+  return (req, res, next) ->
+    passport.authenticate(strategy, opts, (err, user, info) ->
+      return next(err) if err
+      if user
+        req.logIn user, (err) ->
+          return next(err) if err
+          return res.redirect redirectSuccess
+      else
+        # Same error message handling as in passport itself
+        req.flash 'error', info.message || info
+        for f in fields
+          req.flash f, req.body[f]
+        return res.redirect redirectFailure
+    )(req, res, next)
 
 module.exports = (app, passport) ->
   app.get '/auth/login', (req, res) ->
@@ -9,17 +30,5 @@ module.exports = (app, passport) ->
       message: req.flash 'error'
       email: req.flash 'email'
 
-  app.post '/auth/register', (req, res, next) ->
-    user = new User
-      'auth.local.email': req.body.email
-    User.register user, req.body.password, (err, user) ->
-      if err
-        if err.name is 'BadRequestError'
-          req.flash 'error', err.message
-          req.flash 'email', req.body.email
-          res.redirect '/auth/register'
-        else
-          return next(err)
-      else
-        passport.authenticate('local')(req, res, () ->
-          res.redirect '/play')
+  app.post '/auth/register',
+    authenticateKeepFormFields passport, 'local-register', ['email'], '/play', '/auth/register'

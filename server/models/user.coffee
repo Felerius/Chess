@@ -1,6 +1,7 @@
 mongoose = require 'mongoose'
-passportLocalMongoose = require 'passport-local-mongoose'
-messages = require '../config/messages'
+crypto = require 'crypto'
+
+authConfig = require '../config/auth'
 
 schema = mongoose.Schema
   displayName: String
@@ -10,14 +11,24 @@ schema = mongoose.Schema
       salt: String
       hash: String
 
-schema.plugin passportLocalMongoose,
-  usernameField: 'auth.local.email'
-  saltField: 'auth.local.salt'
-  hashField: 'auth.local.hash'
-  incorrectPasswordError: messages.invalidCredentials
-  incorrectUsernameError: messages.invalidCredentials
-  missingUsernameError: messages.emailMissing
-  missingPasswordError: messages.passwordMissing
-  userExistsError: messages.emailInUse
+# These two methods are largely identical to the ones in passport-local-mongoose
+# (https://github.com/saintedlama/passport-local-mongoose).
+schema.methods.setPassword = (password, next) ->
+  user = this
+  crypto.randomBytes authConfig.saltlen, (err, buf) ->
+    return next(err) if err
+    salt = buf.toString authConfig.encoding
+    crypto.pbkdf2 password, salt, authConfig.iterations, authConfig.keylen, (err, hashRaw) ->
+      return next(err) if err
+      user.auth.local.hash = new Buffer(hashRaw, 'binary').toString(authConfig.encoding)
+      user.auth.local.salt = salt
+      next(null)
+
+schema.methods.checkPassword = (password, next) ->
+  user = this
+  crypto.pbkdf2 password, user.auth.local.salt, authConfig.iterations, authConfig.keylen, (err, hashRaw) ->
+    return next(err) if err
+    hash = new Buffer(hashRaw, 'binary').toString(authConfig.encoding)
+    next(null, hash is user.auth.local.hash)
 
 module.exports = mongoose.model 'User', schema

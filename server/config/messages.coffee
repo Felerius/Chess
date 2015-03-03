@@ -1,5 +1,4 @@
 module.exports =
   invalidCredentials: 'Invalid password or email'
-  emailMissing: 'Email not specified'
-  passwordMissing: 'Password not specified'
+  missingCredentials: 'Missing credentials'
   emailInUse: 'Email already in use'
