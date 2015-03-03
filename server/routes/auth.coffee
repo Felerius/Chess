@@ -29,6 +29,9 @@ module.exports = (app, passport, ensureLoggedOut) ->
       message: req.flash 'error'
       email: req.flash 'email'
 
+  app.post '/auth/login',
+    authenticateKeepFormFields passport, 'local-login', ['email'], '/play', '/auth/login'
+
   app.get '/auth/register', ensureLoggedOut, (req, res) ->
     res.render 'auth/register',
       message: req.flash 'error'
@@ -38,5 +41,6 @@ module.exports = (app, passport, ensureLoggedOut) ->
   app.post '/auth/register',
     authenticateKeepFormFields passport, 'local-register', ['email', 'name'], '/play', '/auth/register'
 
-  app.post '/auth/login',
-    authenticateKeepFormFields passport, 'local-login', ['email'], '/play', '/auth/login'
+  app.get '/logout', (req, res) ->
+    req.logout()
+    res.redirect '/'
