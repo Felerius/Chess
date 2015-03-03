@@ -1,0 +1,23 @@
+extends ../base
+
+block content
+  .container
+    .col-sm-offset-3.col-sm-6
+      h1
+        span.fa.fa-sign-in
+        |  Login
+
+      if message && message.length > 0
+        .alert.alert-danger= message
+
+      form(action='/auth/login', method='post')
+        .form-group
+          input.form-control(type='email', name='email', placeholder='Email')
+        .form-group
+          input.form-control(type='password', name='password', placeholder='Password')
+        button.btn.btn-warning.btn-lg(type='submit') Login
+
+      hr
+
+      p Don't have an account <a href="/auth/register">Register</a>.
+      p Or go <a href="/">Home<a/>.
