@@ -9,7 +9,7 @@ module.exports = (passport) ->
     User.findById id, (err, user) -> done(err, user)
 
   # The strategy created by User.createStrategy() would expect 'auth.local.email'
-  # as the name of the Html form field.
+  # as the name of the html form field.
   passport.use new LocalStrategy({
       usernameField: 'email'
       passwordField: 'password'
