@@ -1,9 +1,10 @@
 $split-weight: 70%;
 $board-margin: 5%;
+$navbar-height: 50px;
 
 .board-panel {
     position: absolute;
-    top: 0;
+    top: $navbar-height;
     left: 0;
     right: 100% - $split-weight;
     bottom: 0;
@@ -15,12 +16,14 @@ $board-margin: 5%;
 
 .side-panel {
     position: absolute;
-    top: 0;
+    top: $navbar-height;
     left: $split-weight;
     right: 0;
     bottom: 0;
     background: #ddd;
     &.vertical {
+        // Could add navbar-height via calc(), but that would remove support
+        // for some browsers (mostly android ones).
         top: $split-weight;
         left: 0;
     }
