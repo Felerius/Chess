@@ -28,7 +28,7 @@ app.use passport.session()
 app.use flash()
 
 require('./passport')(passport)
-require('./routes')(app)
+require('./routes')(app, passport)
 require('./socket')(io)
 
 server.listen serverConfig.port, serverConfig.ip
