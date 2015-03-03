@@ -8,10 +8,6 @@ $navbar-height: 50px;
     left: 0;
     right: 100% - $split-weight;
     bottom: 0;
-    &.vertical {
-        right: 0;
-        bottom: 100% - $split-weight;
-    }
 }
 
 .side-panel {
@@ -21,7 +17,15 @@ $navbar-height: 50px;
     right: 0;
     bottom: 0;
     background: #ddd;
-    &.vertical {
+}
+
+@media screen and (max-aspect-ratio: 1/1) {
+    .board-panel {
+        right: 0;
+        bottom: 100% - $split-weight;
+    }
+
+    .side-panel {
         // Could add navbar-height via calc(), but that would remove support
         // for some browsers (mostly android ones).
         top: $split-weight;
