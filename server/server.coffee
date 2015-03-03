@@ -7,15 +7,16 @@ bodyParser = require 'body-parser'
 session = require 'express-session'
 flash = require 'connect-flash'
 http = require 'http'
-socketIO = require 'socket.io'
 mongoose = require 'mongoose'
 passport = require 'passport'
 
 mongoose.connect dbConfig.url
 
+# For some reason socket.io requires a server to be created it's constructor
+# method. Probably because socket.io also requires http.
 app = express()
 server = http.Server(app)
-io = socketIO(http)
+io = require('socket.io')(server)
 
 app.set 'views', './views'
 app.set 'view engine', 'jade'
