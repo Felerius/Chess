@@ -14,7 +14,8 @@ module.exports = (passport) ->
   passport.use 'local-register', new LocalStrategy({
       usernameField: 'email'
       passwordField: 'password'
-    }, (email, password, next) ->
+      passReqToCallback: true
+    }, (req, email, password, next) ->
       process.nextTick () ->
         User.findOne { 'auth.local.email': email }, (err, user) ->
           return next(err) if err
@@ -22,6 +23,7 @@ module.exports = (passport) ->
             return next(null, false, messages.emailInUse)
           user = new User()
           user.auth.local.email = email
+          user.displayName = req.body.name
           user.setPassword password, (err) ->
             return next(err) if err
             user.save (err) ->

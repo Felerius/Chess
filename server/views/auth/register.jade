@@ -12,6 +12,8 @@ block content
 
       form(action='/auth/register', method='post')
         .form-group
+          input.form-control(type='text', name='name', value=name, placeholder='Name')
+        .form-group
           input.form-control(type='email', name='email', value=email, placeholder='Email')
         .form-group
           input.form-control(type='password', name='password', placeholder='Password')
