@@ -18,6 +18,7 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
         # Same error message handling as in passport itself
         req.flash 'error', info.message || info
         for f in fields
+          console.log [f, req.body[f]]
           req.flash f, req.body[f]
         return res.redirect redirectFailure
     )(req, res, next)
@@ -32,6 +33,7 @@ module.exports = (app, passport, ensureLoggedOut) ->
     res.render 'auth/register',
       message: req.flash 'error'
       email: req.flash 'email'
+      name: req.flash 'name'
 
   app.post '/auth/register',
     authenticateKeepFormFields passport, 'local-register', ['email', 'name'], '/play', '/auth/register'
