@@ -23,7 +23,9 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
 
 module.exports = (app, passport) ->
   app.get '/auth/login', (req, res) ->
-    res.render 'auth/login'
+    res.render 'auth/login',
+      message: req.flash 'error'
+      email: req.flash 'email'
 
   app.get '/auth/register', (req, res) ->
     res.render 'auth/register',
@@ -32,3 +34,6 @@ module.exports = (app, passport) ->
 
   app.post '/auth/register',
     authenticateKeepFormFields passport, 'local-register', ['email'], '/play', '/auth/register'
+
+  app.post '/auth/login',
+    authenticateKeepFormFields passport, 'local-login', ['email'], '/play', '/auth/login'
