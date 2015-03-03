@@ -1,3 +1,3 @@
 module.exports = (app) ->
     app.get '/play', (req, res) ->
-      res.render 'game'
+      res.render 'play'
