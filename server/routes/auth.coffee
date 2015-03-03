@@ -22,13 +22,13 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
         return res.redirect redirectFailure
     )(req, res, next)
 
-module.exports = (app, passport) ->
-  app.get '/auth/login', (req, res) ->
+module.exports = (app, passport, ensureLoggedOut) ->
+  app.get '/auth/login', ensureLoggedOut, (req, res) ->
     res.render 'auth/login',
       message: req.flash 'error'
       email: req.flash 'email'
 
-  app.get '/auth/register', (req, res) ->
+  app.get '/auth/register', ensureLoggedOut, (req, res) ->
     res.render 'auth/register',
       message: req.flash 'error'
       email: req.flash 'email'
