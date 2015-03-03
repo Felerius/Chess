@@ -1,14 +1,12 @@
 extends ./base
 
 block content
-  // Inline style for now, this page is a placeholder anyways
-  .container(style='padding-top: 50px;')
-    .jumbotron.text-center
-      h1 Chess
-      .btn-toolbar
-        a.btn.btn-default(href='/auth/login')
-          span.fa.fa-user
-          |  Login
-        a.btn.btn-default(href='/auth/register')
-          span.fa.fa-user
-          |  Register
+  .jumbotron.text-center
+    h1 Chess
+    .btn-toolbar
+      a.btn.btn-default(href='/auth/login')
+        span.fa.fa-user
+        |  Login
+      a.btn.btn-default(href='/auth/register')
+        span.fa.fa-user
+        |  Register
