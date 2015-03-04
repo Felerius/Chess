@@ -10,6 +10,8 @@ schema = mongoose.Schema
       email: String
       salt: String
       hash: String
+    google:
+      id: String
 
 # These two methods are largely identical to the ones in passport-local-mongoose
 # (https://github.com/saintedlama/passport-local-mongoose).

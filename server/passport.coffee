@@ -1,6 +1,8 @@
 messages = require './config/messages'
+authConfig = require './config/auth'
 User = require './models/user'
 LocalStrategy  = require('passport-local').Strategy
+GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 module.exports = (passport) ->
   passport.serializeUser (user, next) ->
@@ -44,4 +46,22 @@ module.exports = (passport) ->
           if not valid
             return next(null, false, messages.invalidCredentials)
           return next(null, user)
+    )
+
+  # Inspired by https://scotch.io/tutorials/easy-node-authentication-google
+  passport.use new GoogleStrategy({
+      clientID: authConfig.google.clientID
+      clientSecret: authConfig.google.clientSecret
+      callbackURL: authConfig.google.callbackURL
+    }, (token, refreshToken, profile, next) ->
+      process.nextTick () ->
+          User.findOne { 'auth.google.id': profile.id }, (err, user) ->
+          return next(err) if err
+          return next(null, user) if user
+          user = new User
+            'auth.google.id': profile.id
+            displayName: profile.displayName
+          user.save (err) ->
+            return next(err) if err
+            return next(null, user)
     )
