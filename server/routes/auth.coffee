@@ -18,7 +18,6 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
         # Same error message handling as in passport itself
         req.flash 'error', info.message || info
         for f in fields
-          console.log [f, req.body[f]]
           req.flash f, req.body[f]
         return res.redirect redirectFailure
     )(req, res, next)
