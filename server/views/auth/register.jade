@@ -1,7 +1,7 @@
 extends ../bootstrapbase
 
 block content
-  .col-sm-offset-3.col-sm-6
+  .col-sm-offset-3.col-sm-6.col-md-offset-4.col-md-4
     h1
       span.fa.fa-sign-in
       |  Register
@@ -11,14 +11,13 @@ block content
 
     form(action='/auth/register', method='post')
       .form-group
-        input.form-control(type='text', name='name', value=name, placeholder='Name')
+        input.form-control(type='text', name='name', value=name, placeholder='Name', required)
       .form-group
-        input.form-control(type='email', name='email', value=email, placeholder='Email')
+        input.form-control(type='email', name='email', value=email, placeholder='Email', required)
       .form-group
-        input.form-control(type='password', name='password', placeholder='Password')
+        input.form-control(type='password', name='password', placeholder='Password', required)
       button.btn.btn-warning.btn-lg(type='submit') Register
 
     hr
 
-    p Already have an account <a href="/auth/login">Login</a>.
-    p Or go <a href="/">Home<a/>.
+    p Already have an account? <a href="/auth/login">Login</a>.
