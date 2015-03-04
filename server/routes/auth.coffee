@@ -41,6 +41,13 @@ module.exports = (app, passport, ensureLoggedOut) ->
   app.post '/auth/register',
     authenticateKeepFormFields passport, 'local-register', ['email', 'name'], '/play', '/auth/register'
 
+  app.get '/auth/google', passport.authenticate('google', { scope: ['profile'] })
+
+  app.get '/auth/google/callback', passport.authenticate('google',
+    successRedirect: '/play'
+    failureRedirect: '/'
+  )
+
   app.get '/logout', (req, res) ->
     req.logout()
     res.redirect '/'

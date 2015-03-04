@@ -56,12 +56,12 @@ module.exports = (passport) ->
     }, (token, refreshToken, profile, next) ->
       process.nextTick () ->
           User.findOne { 'auth.google.id': profile.id }, (err, user) ->
-          return next(err) if err
-          return next(null, user) if user
-          user = new User
-            'auth.google.id': profile.id
-            displayName: profile.displayName
-          user.save (err) ->
             return next(err) if err
-            return next(null, user)
+            return next(null, user) if user
+            user = new User
+              'auth.google.id': profile.id
+              displayName: profile.displayName
+            user.save (err) ->
+              return next(err) if err
+              return next(null, user)
     )
