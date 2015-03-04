@@ -15,20 +15,20 @@ schema = mongoose.Schema
 # (https://github.com/saintedlama/passport-local-mongoose).
 schema.methods.setPassword = (password, next) ->
   user = this
-  crypto.randomBytes authConfig.saltlen, (err, buf) ->
+  crypto.randomBytes authConfig.local.saltlen, (err, buf) ->
     return next(err) if err
-    salt = buf.toString authConfig.encoding
-    crypto.pbkdf2 password, salt, authConfig.iterations, authConfig.keylen, (err, hashRaw) ->
+    salt = buf.toString authConfig.local.encoding
+    crypto.pbkdf2 password, salt, authConfig.local.iterations, authConfig.local.keylen, (err, hashRaw) ->
       return next(err) if err
-      user.auth.local.hash = new Buffer(hashRaw, 'binary').toString(authConfig.encoding)
+      user.auth.local.hash = new Buffer(hashRaw, 'binary').toString(authConfig.local.encoding)
       user.auth.local.salt = salt
       next(null)
 
 schema.methods.checkPassword = (password, next) ->
   user = this
-  crypto.pbkdf2 password, user.auth.local.salt, authConfig.iterations, authConfig.keylen, (err, hashRaw) ->
+  crypto.pbkdf2 password, user.auth.local.salt, authConfig.local.iterations, authConfig.local.keylen, (err, hashRaw) ->
     return next(err) if err
-    hash = new Buffer(hashRaw, 'binary').toString(authConfig.encoding)
+    hash = new Buffer(hashRaw, 'binary').toString(authConfig.local.encoding)
     next(null, hash is user.auth.local.hash)
 
 module.exports = mongoose.model 'User', schema
