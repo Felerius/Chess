@@ -11,7 +11,7 @@ block content
 
     form(action='/auth/register', method='post')
       .form-group
-        input.form-control(type='text', name='name', value=name, placeholder='Name', required)
+        input.form-control(type='text', name='name', value=name, placeholder='Name', required, autofocus)
       .form-group
         input.form-control(type='email', name='email', value=email, placeholder='Email', required)
       .form-group
