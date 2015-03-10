@@ -51,7 +51,8 @@ block content
           h3.panel-title Google login
       .panel-body
         if user.auth.google.id
-          | Connected
+          | Connected to
+          = ' ' + user.auth.google.accountName
         else
           button.btn.btn-danger
             span.fa.fa-google-plus

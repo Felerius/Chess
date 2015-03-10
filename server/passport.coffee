@@ -60,6 +60,7 @@ module.exports = (passport) ->
             return next(null, user) if user
             user = new User
               'auth.google.id': profile.id
+              'auth.google.accountName': profile.displayName
               displayName: profile.displayName
             user.save (err) ->
               return next(err) if err

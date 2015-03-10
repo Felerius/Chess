@@ -12,6 +12,7 @@ schema = mongoose.Schema
       hash: String
     google:
       id: String
+      accountName: String
 
 # These two methods are largely identical to the ones in passport-local-mongoose
 # (https://github.com/saintedlama/passport-local-mongoose).
