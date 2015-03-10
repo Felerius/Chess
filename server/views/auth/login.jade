@@ -9,7 +9,7 @@ block columnContent
   if message && message.length > 0
     .alert.alert-danger= message
 
-  form.clearfix(action='/auth/register', method='post')
+  form.clearfix(action='/auth/login', method='post')
     .form-group
       input.form-control(type='email', name='email', value=email, placeholder='Email', required, autofocus)
     .form-group
