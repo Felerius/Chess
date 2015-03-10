@@ -21,9 +21,9 @@ block columnContent
     .panel-heading.clearfix
       if user.auth.local.email
         // See above on why pull-left
-        h3.panel-title.panel-title-with-a.btn-defaults.pull-left Local login
+        h3.panel-title.panel-title-with-a.btn-defaults.pull-left Email login
         .btn-toolbar.pull-right
-          a.btn-default.btn.btn-xs
+          a.btn-default.btn.btn-xs(href='/profile/email')
             span.fa.fa-pencil
           a.btn-default.btn.btn-xs
             span.fa.fa-remove
