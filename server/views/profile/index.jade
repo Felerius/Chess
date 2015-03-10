@@ -1,0 +1,58 @@
+extends ../bootstrapbase
+
+block content
+  .col-sm-offset-3.col-sm-6.col-md-offset-4.col-md-4
+    .panel.panel-default
+      .panel-heading.clearfix
+        // See http://stackoverflow.com/q/18742086 on why pull-left is needed
+        h3.panel-title.panel-title-with-buttons.pull-left Common
+        button.btn.btn-xs.pull-right
+          span.fa.fa-pencil
+      .panel-body
+        form.form-horizontal
+          .form-group
+            label.col-sm-3.control-label Username
+            .col-sm-9
+              p.form-control-static= user.displayName
+
+    .panel.panel-default
+      .panel-heading.clearfix
+        if user.auth.local.email
+          // See above on why pull-left
+          h3.panel-title.panel-title-with-buttons.pull-left Local login
+          .btn-toolbar.pull-right
+            button.btn.btn-xs
+              span.fa.fa-pencil
+            button.btn.btn-xs
+              span.fa.fa-remove
+        else
+          h3.panel-title Local login
+      .panel-body
+        if user.auth.local.email
+          form.form-horizontal
+            .form-group
+              label.col-sm-3.control-label Email
+              .col-sm-9
+                p.form-control-static= user.auth.local.email
+            .form-group
+              label.col-sm-3.control-label Password
+              .col-sm-9
+                p.form-control-static ********
+        else
+          button.btn.btn-default Enable
+
+    .panel.panel-default
+      .panel-heading.clearfix
+        if user.auth.google.id
+          h3.panel-title.panel-title-with-buttons Google login
+          button.btn.btn-xs.pull-right
+            span.fa.fa-remove
+        else
+          h3.panel-title Google login
+      .panel-body
+        if user.auth.google.id
+          | Connected
+        else
+          button.btn.btn-danger
+            span.fa.fa-google-plus
+            |  Connect
