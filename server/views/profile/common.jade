@@ -1,0 +1,14 @@
+extends ../bootstrapbase
+
+block content
+  .col-sm-offset-3.col-sm-6.col-md-offset-4.col-md-4
+    h1 Common
+    br
+    form.form-horizontal(action='/profile/common', method='post')
+      .form-group
+        label.col-sm-3.control-label(for='displayName') Username
+        .col-sm-9
+          input#displayName.form-control(type='text', name='displayName', value=user.displayName, required, autofocus)
+      .btn-toolbar.pull-right
+        a.btn.btn-default(href='/profile', role='button') Cancel
+        button.btn.btn-warning(type='submit') Save
