@@ -1,0 +1,11 @@
+//- template applied to most pages, except some that use some special layout
+
+extends base
+
+block head
+  link(rel='stylesheet', href='/styles/common.css')
+
+block body
+  .container
+    #main-content
+      block content
