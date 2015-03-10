@@ -44,7 +44,8 @@ block content
     .panel.panel-default
       .panel-heading.clearfix
         if user.auth.google.id
-          h3.panel-title.panel-title-with-buttons Google login
+          // See above on why pull-left
+          h3.panel-title.panel-title-with-buttons.pull-left Google login
           button.btn.btn-xs.pull-right
             span.fa.fa-remove
         else
