@@ -19,7 +19,7 @@ block columnContent
 
   .panel.panel-default
     .panel-heading.clearfix
-      if user.auth.local.email
+      if user.localEnabled()
         // See above on why pull-left
         h3.panel-title.panel-title-with-a.btn-defaults.pull-left Email login
         .btn-toolbar.pull-right
@@ -30,7 +30,7 @@ block columnContent
       else
         h3.panel-title Local login
     .panel-body
-      if user.auth.local.email
+      if user.localEnabled()
         form.form-horizontal
           .form-group
             label.col-sm-3.control-label Email
@@ -45,7 +45,7 @@ block columnContent
 
   .panel.panel-default
     .panel-heading.clearfix
-      if user.auth.google.id
+      if user.googleEnabled()
         // See above on why pull-left
         h3.panel-title.panel-title-with-a.btn-defaults.pull-left Google login
         a.btn-default.btn.btn-xs.pull-right
@@ -53,7 +53,7 @@ block columnContent
       else
         h3.panel-title Google login
     .panel-body
-      if user.auth.google.id
+      if user.googleEnabled()
         | Connected to
         = ' ' + user.auth.google.accountName
       else

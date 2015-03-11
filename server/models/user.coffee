@@ -34,4 +34,8 @@ schema.methods.checkPassword = (password, next) ->
     hash = new Buffer(hashRaw, 'binary').toString(authConfig.local.encoding)
     next(null, hash is user.auth.local.hash)
 
+schema.methods.localEnabled = () -> this.auth.local.email?
+
+schema.methods.googleEnabled = () -> this.auth.google.id?
+
 module.exports = mongoose.model 'User', schema
