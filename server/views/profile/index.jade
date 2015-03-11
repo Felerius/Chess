@@ -9,7 +9,7 @@ block columnContent
       //- See http://stackoverflow.com/q/18742086 on why pull-left is needed
       h3.panel-title.pull-left.panel-title-with-buttons Common
       a.btn.btn-default.btn-xs.pull-right(href='/profile/common')
-        span.fa.fa-pencil
+        i.fa.fa-pencil
     .panel-body
       form.form-horizontal
         .form-group
@@ -24,9 +24,9 @@ block columnContent
       if user.localEnabled()
         .btn-toolbar.pull-right
           a.btn.btn-default.btn-xs(href='/profile/email')
-            span.fa.fa-pencil
+            i.fa.fa-pencil
           a.btn.btn-default.btn-xs(class=user.numAuthMethods() < 2 ? 'disabled' : '')
-            span.fa.fa-remove
+            i.fa.fa-remove
     .panel-body
       if user.localEnabled()
         form.form-horizontal
@@ -47,12 +47,12 @@ block columnContent
       h3.panel-title.pull-left(class=user.googleEnabled() ? 'panel-title-with-buttons' : '') Google login
       if user.googleEnabled()
         a.btn-default.btn.btn-xs.pull-right(class=user.numAuthMethods() < 2 ? 'disabled' : '')
-          span.fa.fa-remove
+          i.fa.fa-remove
     .panel-body
       if user.googleEnabled()
         | Connected to
         = ' ' + user.auth.google.accountName
       else
         a.btn-default.btn.btn-danger
-          span.fa.fa-google-plus
+          i.fa.fa-google-plus
           |  Connect
