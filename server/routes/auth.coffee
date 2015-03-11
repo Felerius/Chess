@@ -47,6 +47,7 @@ module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
       email: req.flash 'email'
 
   app.post '/auth/enable-email',
+    ensureLoggedIn,
     authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/profile', '/auth/enable-email'
 
   app.get '/auth/google', passport.authenticate('google', { scope: ['profile'] })

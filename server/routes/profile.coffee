@@ -7,7 +7,7 @@ module.exports = (app, ensureLoggedIn) ->
     res.render 'profile/common',
       user: req.user
 
-  app.post '/profile/common', (req, res, next) ->
+  app.post '/profile/common', ensureLoggedIn, (req, res, next) ->
     req.user.displayName = req.body.displayName
     req.user.save (err) ->
       return next(err) if err
@@ -17,7 +17,7 @@ module.exports = (app, ensureLoggedIn) ->
     res.render 'profile/email',
       user: req.user
 
-  app.post '/profile/email', (req, res, next) ->
+  app.post '/profile/email', ensureLoggedIn, (req, res, next) ->
     req.user.auth.local.email = req.body.email
     save = () ->
       req.user.save (err) ->
