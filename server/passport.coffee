@@ -13,7 +13,7 @@ module.exports = (passport) ->
       next(err, user)
 
   # Inspired by https://scotch.io/tutorials/easy-node-authentication-setup-and-local
-  passport.use 'local-register', new LocalStrategy({
+  passport.use 'local-enable-or-register', new LocalStrategy({
       usernameField: 'email'
       passwordField: 'password'
       passReqToCallback: true
@@ -23,9 +23,13 @@ module.exports = (passport) ->
           return next(err) if err
           if user
             return next(null, false, messages.emailInUse)
-          user = new User()
+          if req.user
+            # Enabling email login on existing account
+            user = req.user
+          else
+            user = new User
+              displayName: req.body.name
           user.auth.local.email = email
-          user.displayName = req.body.name
           user.setPassword password, (err) ->
             return next(err) if err
             user.save (err) ->

@@ -22,7 +22,7 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
         return res.redirect redirectFailure
     )(req, res, next)
 
-module.exports = (app, passport, ensureLoggedOut) ->
+module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
   app.get '/auth/login', ensureLoggedOut, (req, res) ->
     res.render 'auth/login',
       message: req.flash 'error'
@@ -38,7 +38,16 @@ module.exports = (app, passport, ensureLoggedOut) ->
       name: req.flash 'name'
 
   app.post '/auth/register',
-    authenticateKeepFormFields passport, 'local-register', ['email', 'name'], '/play', '/auth/register'
+    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/play', '/auth/register'
+
+  app.get '/auth/enable-email', ensureLoggedIn, (req, res) ->
+    res.render 'auth/enable-email',
+      user: req.user
+      message: req.flash 'error'
+      email: req.flash 'email'
+
+  app.post '/auth/enable-email',
+    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/profile', '/auth/enable-email'
 
   app.get '/auth/google', passport.authenticate('google', { scope: ['profile'] })
 

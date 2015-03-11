@@ -11,5 +11,5 @@ ensureLoggedOut = (req, res, next) ->
 module.exports = (app, passport) ->
   require('./main')(app)
   require('./play')(app, ensureLoggedIn)
-  require('./auth')(app, passport, ensureLoggedOut)
+  require('./auth')(app, passport, ensureLoggedIn, ensureLoggedOut)
   require('./profile')(app, ensureLoggedIn)
