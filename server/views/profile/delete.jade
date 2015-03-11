@@ -1,0 +1,11 @@
+extends ../templates/centercolumn
+
+block onPageTitle
+  i.fa.fa-remove
+  |  Confirm Delete
+
+block columnContent
+  .alert.alert-danger Are you sure you want to delete your account?
+  .btn-toolbar.pull-right
+    a.btn.btn-default(href='/profile') Cancel
+    a.btn.btn-danger(href='/profile/delete/confirmed') Delete

@@ -13,3 +13,11 @@ module.exports = (app, ensureLoggedIn) ->
     req.user.save (err) ->
       return next(err) if err
       res.redirect '/profile'
+
+  app.get '/profile/delete', ensureLoggedIn, (req, res) ->
+    res.render 'profile/delete',
+      user: req.user
+
+  app.get '/profile/delete/confirmed', ensureLoggedIn, (req, res) ->
+    req.user.remove()
+    res.redirect '/logout'
