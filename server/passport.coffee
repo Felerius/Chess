@@ -53,20 +53,39 @@ module.exports = (passport) ->
     )
 
   # Inspired by https://scotch.io/tutorials/easy-node-authentication-google
-  passport.use new GoogleStrategy({
+  passport.use 'google-register', new GoogleStrategy({
       clientID: authConfig.google.clientID
       clientSecret: authConfig.google.clientSecret
-      callbackURL: authConfig.google.callbackURL
+      callbackURL: authConfig.google.callbackRegister
     }, (token, refreshToken, profile, next) ->
       process.nextTick () ->
-          User.findOne { 'auth.google.id': profile.id }, (err, user) ->
+        User.findOne { 'auth.google.id': profile.id }, (err, user) ->
+          return next(err) if err
+          return next(null, user) if user
+          user = new User
+            'auth.google.id': profile.id
+            'auth.google.accountName': profile.displayName
+            displayName: profile.displayName
+          user.save (err) ->
             return next(err) if err
-            return next(null, user) if user
-            user = new User
-              'auth.google.id': profile.id
-              'auth.google.accountName': profile.displayName
-              displayName: profile.displayName
-            user.save (err) ->
-              return next(err) if err
-              return next(null, user)
+            return next(null, user)
+    )
+
+  passport.use 'google-connect', new GoogleStrategy({
+      clientID: authConfig.google.clientID
+      clientSecret: authConfig.google.clientSecret
+      callbackURL: authConfig.google.callbackConnect
+      passReqToCallback: true
+    }, (req, token, refreshToken, profile, next) ->
+      process.nextTick ()->
+        User.findOne {'auth.google.id': profile.id }, (err, user) ->
+          return next(err) if err
+          if user
+            return next(null, false, messages.alreadyConnected)
+          existingUser = req.user
+          existingUser.auth.google.id = profile.id
+          existingUser.auth.google.accountName = profile.displayName
+          existingUser.save (err) ->
+            return next(err) if err
+            return next(null, existingUser)
     )

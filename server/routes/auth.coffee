@@ -23,6 +23,10 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
     )(req, res, next)
 
 module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
+  #############################################################################
+  # Email #####################################################################
+  #############################################################################
+
   app.get '/auth/email/login', ensureLoggedOut, (req, res) ->
     res.render 'auth/email/login',
       message: req.flash 'error'
@@ -75,12 +79,28 @@ module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
       return next(err) if err
       res.redirect '/profile'
 
-  app.get '/auth/google', passport.authenticate('google', { scope: ['profile'] })
+  #############################################################################
+  # Google ####################################################################
+  #############################################################################
 
-  app.get '/auth/google/callback', passport.authenticate('google',
-    successRedirect: '/play'
-    failureRedirect: '/'
-  )
+  app.get '/auth/google',
+    passport.authenticate 'google-register',
+      scope: ['profile']
+
+  app.get '/auth/google/callback',
+    passport.authenticate 'google-register',
+      successRedirect: '/play'
+      failureRedirect: '/'
+
+  app.get '/auth/google/connect',
+    passport.authenticate 'google-connect',
+      scope: ['profile']
+
+  app.get '/auth/google/connect/callback',
+    passport.authenticate 'google-connect',
+      successRedirect: '/profile'
+      failureRedirect: '/profile'
+      failureFlash: true
 
   app.get '/auth/google/unlink', ensureLoggedIn, (req, res, next) ->
     req.user.auth.google.id = undefined

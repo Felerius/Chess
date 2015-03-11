@@ -5,6 +5,9 @@ block onPageTitle
   |  Profile
 
 block columnContent
+  if message && message.length > 0
+    .alert.alert-danger= message
+
   .panel.panel-default
     .panel-heading.clearfix
       //- See http://stackoverflow.com/q/18742086 on why pull-left is needed
@@ -60,6 +63,6 @@ block columnContent
         | Connected to
         = ' ' + user.auth.google.accountName
       else
-        a.btn-default.btn.btn-danger
+        a.btn-default.btn.btn-danger(href='/auth/google/connect')
           i.fa.fa-google-plus
           |  Connect

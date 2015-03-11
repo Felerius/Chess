@@ -2,6 +2,7 @@ module.exports = (app, ensureLoggedIn) ->
   app.get '/profile', ensureLoggedIn, (req, res) ->
     res.render 'profile',
       user: req.user
+      message: req.flash 'error'
 
   app.get '/profile/edit', ensureLoggedIn, (req, res) ->
     res.render 'profile/edit',
