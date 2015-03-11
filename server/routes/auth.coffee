@@ -23,32 +23,49 @@ authenticateKeepFormFields = (passport, strategy, fields, redirectSuccess, redir
     )(req, res, next)
 
 module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
-  app.get '/auth/login', ensureLoggedOut, (req, res) ->
-    res.render 'auth/login',
+  app.get '/auth/email/login', ensureLoggedOut, (req, res) ->
+    res.render 'auth/email/login',
       message: req.flash 'error'
       email: req.flash 'email'
 
-  app.post '/auth/login',
-    authenticateKeepFormFields passport, 'local-login', ['email'], '/play', '/auth/login'
+  app.post '/auth/email/login',
+    authenticateKeepFormFields passport, 'local-login', ['email'], '/play', '/auth/email/login'
 
-  app.get '/auth/register', ensureLoggedOut, (req, res) ->
-    res.render 'auth/register',
+  app.get '/auth/email/register', ensureLoggedOut, (req, res) ->
+    res.render 'auth/email/register',
       message: req.flash 'error'
       email: req.flash 'email'
       name: req.flash 'name'
 
-  app.post '/auth/register',
-    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/play', '/auth/register'
+  app.post '/auth/email/register',
+    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/play', '/auth/email/register'
 
-  app.get '/auth/enable-email', ensureLoggedIn, (req, res) ->
-    res.render 'auth/enable-email',
+  app.get '/auth/email/enable', ensureLoggedIn, (req, res) ->
+    res.render 'auth/email/enable',
       user: req.user
       message: req.flash 'error'
       email: req.flash 'email'
 
-  app.post '/auth/enable-email',
+  app.post '/auth/email/enable',
     ensureLoggedIn,
-    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/profile', '/auth/enable-email'
+    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/profile', '/auth/email/enable'
+
+  app.get '/auth/email/edit', ensureLoggedIn, (req, res) ->
+    res.render 'auth/email/edit',
+      user: req.user
+
+  app.post '/auth/email/edit', ensureLoggedIn, (req, res, next) ->
+    req.user.auth.local.email = req.body.email
+    save = () ->
+      req.user.save (err) ->
+        return next(err) if err
+        res.redirect '/profile'
+    if req.body.password
+      req.user.setPassword req.body.password, (err) ->
+        return next(err) if err
+        save()
+    else
+      save()
 
   app.get '/auth/google', passport.authenticate('google', { scope: ['profile'] })
 

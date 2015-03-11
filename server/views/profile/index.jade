@@ -11,7 +11,7 @@ block columnContent
       h3.panel-title.pull-left.panel-title-with-buttons
         i.fa.fa-fw.fa-info
         |  Info
-      a.btn.btn-default.btn-xs.pull-right(href='/profile/info')
+      a.btn.btn-default.btn-xs.pull-right(href='/profile/edit')
         i.fa.fa-pencil
     .panel-body
       form.form-horizontal
@@ -28,7 +28,7 @@ block columnContent
         |  Email login
       if user.localEnabled()
         .btn-toolbar.pull-right
-          a.btn.btn-default.btn-xs(href='/profile/email')
+          a.btn.btn-default.btn-xs(href='/auth/email/edit')
             i.fa.fa-pencil
           a.btn.btn-default.btn-xs(class=user.numAuthMethods() < 2 ? 'disabled' : '')
             i.fa.fa-remove
@@ -44,7 +44,7 @@ block columnContent
             .col-sm-9
               p.form-control-static ********
       else
-        a.btn-default.btn.btn-default(href='/auth/enable-email') Enable
+        a.btn-default.btn.btn-default(href='/auth/email/enable') Enable
 
   .panel.panel-default
     .panel-heading.clearfix

@@ -1,4 +1,4 @@
-extends ../templates/centercolumn
+extends ../../templates/centercolumn
 
 block onPageTitle
   i.fa.fa-sign-in
@@ -8,7 +8,7 @@ block columnContent
   if message && message.length > 0
     .alert.alert-danger= message
 
-  form.clearfix(action='/auth/register', method='post')
+  form.clearfix(action='/auth/email/register', method='post')
     .form-group
       input.form-control(type='text', name='name', value=name, placeholder='Name', required, autofocus)
     .form-group
@@ -19,4 +19,4 @@ block columnContent
 
   hr
 
-  p Already have an account? <a href="/auth/login">Login</a>.
+  p Already have an account? <a href="/auth/email/login">Login</a>.

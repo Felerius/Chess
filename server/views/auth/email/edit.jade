@@ -1,11 +1,11 @@
-extends ../templates/centercolumn
+extends ../../templates/centercolumn
 
 block onPageTitle
   i.fa.fa-envelope-o
   |  Email login
 
 block columnContent
-  form.form-horizontal.clearfix(action='/profile/email', method='post')
+  form.form-horizontal.clearfix(action='/auth/email/edit', method='post')
     .form-group
       label.col-sm-3.control-label(for='email') Email
       .col-sm-9

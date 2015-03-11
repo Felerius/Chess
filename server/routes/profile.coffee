@@ -3,29 +3,12 @@ module.exports = (app, ensureLoggedIn) ->
     res.render 'profile',
       user: req.user
 
-  app.get '/profile/info', ensureLoggedIn, (req, res) ->
-    res.render 'profile/info',
+  app.get '/profile/edit', ensureLoggedIn, (req, res) ->
+    res.render 'profile/edit',
       user: req.user
 
-  app.post '/profile/info', ensureLoggedIn, (req, res, next) ->
+  app.post '/profile/edit', ensureLoggedIn, (req, res, next) ->
     req.user.displayName = req.body.displayName
     req.user.save (err) ->
       return next(err) if err
       res.redirect '/profile'
-
-  app.get '/profile/email', ensureLoggedIn, (req, res) ->
-    res.render 'profile/email',
-      user: req.user
-
-  app.post '/profile/email', ensureLoggedIn, (req, res, next) ->
-    req.user.auth.local.email = req.body.email
-    save = () ->
-      req.user.save (err) ->
-        return next(err) if err
-        res.redirect '/profile'
-    if req.body.password
-      req.user.setPassword req.body.password, (err) ->
-        return next(err) if err
-        save()
-    else
-      save()

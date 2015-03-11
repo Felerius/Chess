@@ -1,20 +1,18 @@
-extends ../templates/centercolumn
+extends ../../templates/centercolumn
 
 block onPageTitle
-  i.fa.fa-sign-in
-  |  Login
+  i.fa.fa-envelope-o
+  |  Email login
 
 block columnContent
   if message && message.length > 0
     .alert.alert-danger= message
 
-  form.clearfix(action='/auth/login', method='post')
+  form.clearfix(action='/auth/email/enable', method='post')
     .form-group
       input.form-control(type='email', name='email', value=email, placeholder='Email', required, autofocus)
     .form-group
       input.form-control(type='password', name='password', placeholder='Password', required)
-    button.btn.btn-primary.pull-right(type='submit') Login
-
-  hr
-
-  p Don't have an account? <a href="/auth/register">Register</a>.
+    .btn-toolbar.pull-right
+      a.btn.btn-default(href='/profile') Cancel
+      button.btn.btn-primary(type='submit') Enable
