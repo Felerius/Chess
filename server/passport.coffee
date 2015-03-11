@@ -13,7 +13,7 @@ module.exports = (passport) ->
       next(err, user)
 
   # Inspired by https://scotch.io/tutorials/easy-node-authentication-setup-and-local
-  passport.use 'local-enable-or-register', new LocalStrategy({
+  passport.use 'email-enable-or-register', new LocalStrategy({
       usernameField: 'email'
       passwordField: 'password'
       passReqToCallback: true
@@ -38,7 +38,7 @@ module.exports = (passport) ->
     )
 
   # Inspired by https://scotch.io/tutorials/easy-node-authentication-setup-and-local
-  passport.use 'local-login', new LocalStrategy({
+  passport.use 'email-login', new LocalStrategy({
       usernameField: 'email'
       passwordField: 'password'
     }, (email, password, next) ->

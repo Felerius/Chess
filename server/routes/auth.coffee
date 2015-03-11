@@ -29,7 +29,7 @@ module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
       email: req.flash 'email'
 
   app.post '/auth/email/login',
-    authenticateKeepFormFields passport, 'local-login', ['email'], '/play', '/auth/email/login'
+    authenticateKeepFormFields passport, 'email-login', ['email'], '/play', '/auth/email/login'
 
   app.get '/auth/email/register', ensureLoggedOut, (req, res) ->
     res.render 'auth/email/register',
@@ -38,7 +38,7 @@ module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
       name: req.flash 'name'
 
   app.post '/auth/email/register',
-    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/play', '/auth/email/register'
+    authenticateKeepFormFields passport, 'email-enable-or-register', ['email', 'name'], '/play', '/auth/email/register'
 
   app.get '/auth/email/enable', ensureLoggedIn, (req, res) ->
     res.render 'auth/email/enable',
@@ -48,7 +48,7 @@ module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
 
   app.post '/auth/email/enable',
     ensureLoggedIn,
-    authenticateKeepFormFields passport, 'local-enable-or-register', ['email', 'name'], '/profile', '/auth/email/enable'
+    authenticateKeepFormFields passport, 'email-enable-or-register', ['email', 'name'], '/profile', '/auth/email/enable'
 
   app.get '/auth/email/edit', ensureLoggedIn, (req, res) ->
     res.render 'auth/email/edit',
