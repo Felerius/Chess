@@ -1,14 +1,17 @@
 extends ../templates/centercolumn
 
 block onPageTitle
-  | Profile
+  i.fa.fa-user
+  |  Profile
 
 block columnContent
   .panel.panel-default
     .panel-heading.clearfix
       //- See http://stackoverflow.com/q/18742086 on why pull-left is needed
-      h3.panel-title.pull-left.panel-title-with-buttons Common
-      a.btn.btn-default.btn-xs.pull-right(href='/profile/common')
+      h3.panel-title.pull-left.panel-title-with-buttons
+        i.fa.fa-fw.fa-info
+        |  Info
+      a.btn.btn-default.btn-xs.pull-right(href='/profile/info')
         i.fa.fa-pencil
     .panel-body
       form.form-horizontal
@@ -20,7 +23,9 @@ block columnContent
   .panel.panel-default
     .panel-heading.clearfix
       //- See above on why pull-left
-      h3.panel-title.pull-left(class=user.localEnabled() ? 'panel-title-with-buttons' : '') Email login
+      h3.panel-title.pull-left(class=user.localEnabled() ? 'panel-title-with-buttons' : '')
+        i.fa.fa-fw.fa-envelope-o
+        |  Email login
       if user.localEnabled()
         .btn-toolbar.pull-right
           a.btn.btn-default.btn-xs(href='/profile/email')
@@ -44,7 +49,9 @@ block columnContent
   .panel.panel-default
     .panel-heading.clearfix
       //- See above on why pull-left
-      h3.panel-title.pull-left(class=user.googleEnabled() ? 'panel-title-with-buttons' : '') Google login
+      h3.panel-title.pull-left(class=user.googleEnabled() ? 'panel-title-with-buttons' : '')
+        i.fa.fa-fw.fa-google
+        |  Google login
       if user.googleEnabled()
         a.btn-default.btn.btn-xs.pull-right(class=user.numAuthMethods() < 2 ? 'disabled' : '')
           i.fa.fa-remove

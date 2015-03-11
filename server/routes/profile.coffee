@@ -3,11 +3,11 @@ module.exports = (app, ensureLoggedIn) ->
     res.render 'profile',
       user: req.user
 
-  app.get '/profile/common', ensureLoggedIn, (req, res) ->
-    res.render 'profile/common',
+  app.get '/profile/info', ensureLoggedIn, (req, res) ->
+    res.render 'profile/info',
       user: req.user
 
-  app.post '/profile/common', ensureLoggedIn, (req, res, next) ->
+  app.post '/profile/info', ensureLoggedIn, (req, res, next) ->
     req.user.displayName = req.body.displayName
     req.user.save (err) ->
       return next(err) if err

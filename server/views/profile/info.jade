@@ -1,10 +1,11 @@
 extends ../templates/centercolumn
 
 block onPageTitle
-  | Common
+  i.fa.fa-info
+  |  Info
 
 block columnContent
-  form.form-horizontal.clearfix(action='/profile/common', method='post')
+  form.form-horizontal.clearfix(action='/profile/info', method='post')
     .form-group
       label.col-sm-3.control-label(for='displayName') Username
       .col-sm-9
