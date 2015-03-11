@@ -38,4 +38,10 @@ schema.methods.localEnabled = () -> this.auth.local.email?
 
 schema.methods.googleEnabled = () -> this.auth.google.id?
 
+schema.methods.numAuthMethods = () ->
+  n = 0
+  n++ if this.localEnabled()
+  n++ if this.googleEnabled()
+  return n
+
 module.exports = mongoose.model 'User', schema

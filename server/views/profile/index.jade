@@ -6,8 +6,8 @@ block onPageTitle
 block columnContent
   .panel.panel-default
     .panel-heading.clearfix
-      // See http://stackoverflow.com/q/18742086 on why pull-left is needed
-      h3.panel-title.panel-title-with-a.btn-defaults.pull-left Common
+      //- See http://stackoverflow.com/q/18742086 on why pull-left is needed
+      h3.panel-title.pull-left.panel-title-with-buttons Common
       a.btn.btn-default.btn-xs.pull-right(href='/profile/common')
         span.fa.fa-pencil
     .panel-body
@@ -19,16 +19,14 @@ block columnContent
 
   .panel.panel-default
     .panel-heading.clearfix
+      //- See above on why pull-left
+      h3.panel-title.pull-left(class=user.localEnabled() ? 'panel-title-with-buttons' : '') Email login
       if user.localEnabled()
-        // See above on why pull-left
-        h3.panel-title.panel-title-with-a.btn-defaults.pull-left Email login
         .btn-toolbar.pull-right
-          a.btn-default.btn.btn-xs(href='/profile/email')
+          a.btn.btn-default.btn-xs(href='/profile/email')
             span.fa.fa-pencil
-          a.btn-default.btn.btn-xs
+          a.btn.btn-default.btn-xs(class=user.numAuthMethods() < 2 ? 'disabled' : '')
             span.fa.fa-remove
-      else
-        h3.panel-title Local login
     .panel-body
       if user.localEnabled()
         form.form-horizontal
@@ -45,13 +43,11 @@ block columnContent
 
   .panel.panel-default
     .panel-heading.clearfix
+      //- See above on why pull-left
+      h3.panel-title.pull-left(class=user.googleEnabled() ? 'panel-title-with-buttons' : '') Google login
       if user.googleEnabled()
-        // See above on why pull-left
-        h3.panel-title.panel-title-with-a.btn-defaults.pull-left Google login
-        a.btn-default.btn.btn-xs.pull-right
+        a.btn-default.btn.btn-xs.pull-right(class=user.numAuthMethods() < 2 ? 'disabled' : '')
           span.fa.fa-remove
-      else
-        h3.panel-title Google login
     .panel-body
       if user.googleEnabled()
         | Connected to
