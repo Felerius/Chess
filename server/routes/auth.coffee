@@ -67,12 +67,27 @@ module.exports = (app, passport, ensureLoggedIn, ensureLoggedOut) ->
     else
       save()
 
+  app.get '/auth/email/disable', ensureLoggedIn, (req, res, next) ->
+    req.user.auth.local.email = undefined
+    req.user.auth.local.hash = undefined
+    req.user.auth.local.salt = undefined
+    req.user.save (err) ->
+      return next(err) if err
+      res.redirect '/profile'
+
   app.get '/auth/google', passport.authenticate('google', { scope: ['profile'] })
 
   app.get '/auth/google/callback', passport.authenticate('google',
     successRedirect: '/play'
     failureRedirect: '/'
   )
+
+  app.get '/auth/google/unlink', ensureLoggedIn, (req, res, next) ->
+    req.user.auth.google.id = undefined
+    req.user.auth.google.accountName = undefined
+    req.user.save (err) ->
+      return next(err) if err
+      res.redirect '/profile'
 
   app.get '/logout', (req, res) ->
     req.logout()

@@ -30,7 +30,7 @@ block columnContent
         .btn-toolbar.pull-right
           a.btn.btn-default.btn-xs(href='/auth/email/edit')
             i.fa.fa-pencil
-          a.btn.btn-default.btn-xs(class=user.numAuthMethods() < 2 ? 'disabled' : '')
+          a.btn.btn-default.btn-xs(class=user.numAuthMethods() < 2 ? 'disabled' : '', href='/auth/email/disable')
             i.fa.fa-remove
     .panel-body
       if user.localEnabled()
@@ -53,7 +53,7 @@ block columnContent
         i.fa.fa-fw.fa-google
         |  Google login
       if user.googleEnabled()
-        a.btn-default.btn.btn-xs.pull-right(class=user.numAuthMethods() < 2 ? 'disabled' : '')
+        a.btn-default.btn.btn-xs.pull-right(class=user.numAuthMethods() < 2 ? 'disabled' : '', href='/auth/google/unlink')
           i.fa.fa-remove
     .panel-body
       if user.googleEnabled()
