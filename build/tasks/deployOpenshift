@@ -1,5 +1,5 @@
 clean
 build
 copy:packageJson
-coffee:openshiftConfig
+copy:openshiftHooks
 buildcontrol:openshift

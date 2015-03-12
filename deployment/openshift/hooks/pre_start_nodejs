@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo Setting up environment variable aliases
+export IP=$OPENSHIFT_NODEJS_IP
+export PORT=$OPENSHIFT_NODEJS_PORT
+export SESSION_SECRET=$OPENSHIFT_SECRET_TOKEN
+export DB_URL=$OPENSHIFT_MONGODB_DB_URL
