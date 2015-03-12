@@ -18,6 +18,6 @@ module.exports = (app, ensureLoggedIn) ->
     res.render 'profile/delete',
       user: req.user
 
-  app.get '/profile/delete/confirmed', ensureLoggedIn, (req, res) ->
+  app.post '/profile/delete', ensureLoggedIn, (req, res) ->
     req.user.remove()
     res.redirect '/logout'

@@ -6,6 +6,7 @@ block onPageTitle
 
 block columnContent
   .alert.alert-danger Are you sure you want to delete your account?
-  .btn-toolbar.pull-right
-    a.btn.btn-default(href='/profile') Cancel
-    a.btn.btn-danger(href='/profile/delete/confirmed') Delete
+  form.clearfix(action='/profile/delete', method='post')
+    .btn-toolbar.pull-right
+      a.btn.btn-default(href='/profile') Cancel
+      button.btn.btn-danger(type='submit') Delete
