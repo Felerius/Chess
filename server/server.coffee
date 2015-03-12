@@ -28,6 +28,13 @@ app.use passport.initialize()
 app.use passport.session()
 app.use flash()
 
+if serverConfig.forceHttps
+  app.use (req, res, next) ->
+    if not req.secure
+      res.redirect "https://#{req.get 'host'}#{req.url}"
+    else
+      next()
+
 require('./passport')(passport)
 require('./routes')(app, passport)
 require('./socket')(io)
