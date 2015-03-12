@@ -30,7 +30,7 @@ app.use flash()
 
 if serverConfig.forceHttps
   app.use (req, res, next) ->
-    if not req.secure
+    if req.headers['x-forwarded-proto'] is 'http'
       res.redirect "https://#{req.get 'host'}#{req.url}"
     else
       next()
