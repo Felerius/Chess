@@ -1,0 +1,71 @@
+extends ../templates/centercolumn
+
+block onPageTitle
+  i.fa.fa-user
+  |  Profile
+
+block columnContent
+  if message && message.length > 0
+    .alert.alert-danger= message
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      //- See http://stackoverflow.com/q/18742086 on why pull-left is needed
+      h3.panel-title.pull-left.panel-title-with-buttons
+        i.fa.fa-fw.fa-info
+        |  Info
+      a.btn.btn-default.btn-xs.pull-right(href='/profile/edit')
+        i.fa.fa-pencil
+    .panel-body
+      form.form-horizontal
+        .form-group
+          label.col-sm-3.control-label Username
+          .col-sm-9
+            p.form-control-static= user.displayName
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      //- See above on why pull-left
+      h3.panel-title.pull-left(class=user.localEnabled() ? 'panel-title-with-buttons' : '')
+        i.fa.fa-fw.fa-envelope-o
+        |  Email login
+      if user.localEnabled()
+        .btn-toolbar.pull-right
+          a.btn.btn-default.btn-xs(href='/auth/email/edit')
+            i.fa.fa-pencil
+          a.btn.btn-default.btn-xs(class=user.numAuthMethods() < 2 ? 'disabled' : '', href='/auth/email/disable')
+            i.fa.fa-remove
+    .panel-body
+      if user.localEnabled()
+        form.form-horizontal
+          .form-group
+            label.col-sm-3.control-label Email
+            .col-sm-9
+              p.form-control-static= user.auth.local.email
+          .form-group
+            label.col-sm-3.control-label Password
+            .col-sm-9
+              p.form-control-static ********
+      else
+        a.btn-default.btn.btn-default(href='/auth/email/enable') Enable
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      //- See above on why pull-left
+      h3.panel-title.pull-left(class=user.googleEnabled() ? 'panel-title-with-buttons' : '')
+        i.fa.fa-fw.fa-google
+        |  Google login
+      if user.googleEnabled()
+        a.btn-default.btn.btn-xs.pull-right(class=user.numAuthMethods() < 2 ? 'disabled' : '', href='/auth/google/unlink')
+          i.fa.fa-remove
+    .panel-body
+      if user.googleEnabled()
+        | Connected to
+        = ' ' + user.auth.google.accountName
+      else
+        a.btn-default.btn.btn-danger(href='/auth/google/connect')
+          i.fa.fa-google-plus
+          |  Connect
+
+  .text-center
+    a.btn.btn-danger(href='/profile/delete') Delete account

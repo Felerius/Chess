@@ -1,0 +1,20 @@
+extends ../../templates/centercolumn
+
+block onPageTitle
+  i.fa.fa-sign-in
+  |  Login
+
+block columnContent
+  if message && message.length > 0
+    .alert.alert-danger= message
+
+  form.clearfix(action='/auth/email/login', method='post')
+    .form-group
+      input.form-control(type='email', name='email', value=email, placeholder='Email', required, autofocus)
+    .form-group
+      input.form-control(type='password', name='password', placeholder='Password', required)
+    button.btn.btn-primary.pull-right(type='submit') Login
+
+  hr
+
+  p Don't have an account? <a href="/auth/email/register">Register</a>.
